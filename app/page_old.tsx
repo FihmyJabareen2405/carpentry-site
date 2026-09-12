@@ -241,6 +241,14 @@ export default async function HomePage() {
                 </div>
               </div>
 
+              {heroProject && (
+                <Link
+                  href={`/projects/${heroProject.slug}`}
+                  className="mt-10 inline-flex items-center gap-3 text-sm text-white/65 transition hover:text-white"
+                >
+                  <span className="h-px w-12 bg-white/40" />
+                </Link>
+              )}
             </div>
           </div>
 
@@ -285,7 +293,7 @@ export default async function HomePage() {
                   return (
                     <Link
                       key={category.id}
-                      href={`/categories/${category.slug}`}
+                      href={`/projects?category=${category.slug}`}
                       className="group relative grid min-h-[165px] grid-cols-[55px_1fr_auto] items-center gap-4 overflow-hidden px-4 py-7 transition md:min-h-[190px] md:grid-cols-[90px_1fr_auto] md:px-7 md:py-9"
                     >
                       {background && (
@@ -359,7 +367,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="customer-gallery" className="mx-auto max-w-[1500px] scroll-mt-28 px-3 pb-28 sm:px-5 md:pb-36">
+      <section className="mx-auto max-w-[1500px] px-3 pb-28 sm:px-5 md:pb-36">
         <div className="mb-10 px-3 sm:px-4 md:mb-14">
           <div className="flex flex-col gap-7 md:flex-row md:items-end md:justify-between">
             <div>

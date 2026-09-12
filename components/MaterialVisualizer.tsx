@@ -3064,7 +3064,7 @@ function HandleButton({
       >
         {item.kind === "none" ? (
           <div className="flex flex-col items-center gap-2 text-stone-400">
-            <span className="text-2xl">—</span>
+            <span className="text-2xl">.</span>
             <span className="text-xs">ללא ידית</span>
           </div>
         ) : (

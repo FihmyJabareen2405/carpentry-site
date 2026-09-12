@@ -100,7 +100,7 @@ export default async function NewProjectPage() {
             </h1>
 
             <p className="mt-2 max-w-2xl text-stone-500">
-              שלב 1 מתוך 2 — הזינו את פרטי
+              שלב 1 מתוך 2 . הזינו את פרטי
               הפרויקט. לאחר השמירה נעבור
               להעלאת התמונות.
             </p>

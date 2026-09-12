@@ -149,7 +149,7 @@ export default function ContactPage() {
 
             <p className="mt-4 text-sm leading-7 text-stone-600">
               אם יש לכם תמונה של החלל, תמונת השראה
-              או מידות משוערות — כדאי להכין אותן.
+              או מידות משוערות . כדאי להכין אותן.
               זה יעזור להבין מהר יותר את הפרויקט.
             </p>
           </div>

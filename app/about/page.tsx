@@ -41,7 +41,7 @@ export default function AboutPage() {
 
             <p className="mt-7 max-w-2xl text-lg leading-8 text-stone-300 md:text-xl">
               כל פרויקט מתחיל בהבנת החלל,
-              הצרכים והסגנון — ורק אחר כך
+              הצרכים והסגנון . ורק אחר כך
               עוברים לחומר, לייצור ולהתקנה.
             </p>
           </div>

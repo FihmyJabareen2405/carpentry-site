@@ -301,7 +301,7 @@ export default function DirectProjectImageUploader({
         </p>
 
         <p className="mt-1 text-sm text-stone-500">
-          JPG, PNG או WebP — עד 15MB לתמונה
+          JPG, PNG או WebP . עד 15MB לתמונה
         </p>
 
         <button
