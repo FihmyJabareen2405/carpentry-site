@@ -85,7 +85,12 @@ type HandleKind =
   | "tbar"
   | "arch"
   | "knob"
-  | "recessed";
+  | "recessed"
+  | "edge-pull"
+  | "profile"
+  | "cup"
+  | "slim"
+  | "integrated";
 
 type HandleFinish =
   | "black"
@@ -321,6 +326,31 @@ const handles: HandleOption[] = [
     id: "recessed",
     name: "ידית שקועה",
     kind: "recessed",
+  },
+  {
+    id: "edge-pull",
+    name: "Edge Pull",
+    kind: "edge-pull",
+  },
+  {
+    id: "profile",
+    name: "ידית פרופיל",
+    kind: "profile",
+  },
+  {
+    id: "cup",
+    name: "Cup Handle",
+    kind: "cup",
+  },
+  {
+    id: "slim",
+    name: "ידית דקה",
+    kind: "slim",
+  },
+  {
+    id: "integrated",
+    name: "ידית אינטגרלית",
+    kind: "integrated",
   },
 ];
 
@@ -1784,7 +1814,7 @@ function MaterialSelector({
       )}
 
       <ControlBlock title="סוג ידית">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {handles.map((handle) => (
             <HandleButton
               key={handle.id}
@@ -2744,6 +2774,158 @@ function HandleGraphic({
     );
   }
 
+  if (kind === "edge-pull") {
+    return (
+      <svg
+        viewBox="0 0 320 100"
+        aria-hidden="true"
+        className="block h-auto w-full overflow-visible"
+        style={{ filter: shadow }}
+      >
+        <defs>
+          <linearGradient id={`edge-${finish}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={metal.light} />
+            <stop offset="48%" stopColor={metal.main} />
+            <stop offset="100%" stopColor={metal.dark} />
+          </linearGradient>
+        </defs>
+        <ellipse cx="160" cy="78" rx="128" ry="7" fill="rgba(0,0,0,.10)" />
+        <path
+          d="M42 38H278L263 58H57Z"
+          fill={`url(#edge-${finish})`}
+        />
+        <path
+          d="M57 58H263"
+          stroke="rgba(255,255,255,.18)"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
+  if (kind === "profile") {
+    return (
+      <svg
+        viewBox="0 0 320 100"
+        aria-hidden="true"
+        className="block h-auto w-full overflow-visible"
+        style={{ filter: shadow }}
+      >
+        <defs>
+          <linearGradient id={`profile-${finish}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={metal.light} />
+            <stop offset="52%" stopColor={metal.main} />
+            <stop offset="100%" stopColor={metal.dark} />
+          </linearGradient>
+        </defs>
+        <ellipse cx="160" cy="79" rx="118" ry="6" fill="rgba(0,0,0,.10)" />
+        <path
+          d="M46 34H274V50H62V66H46Z"
+          fill={`url(#profile-${finish})`}
+        />
+        <path
+          d="M62 50H268"
+          stroke="rgba(255,255,255,.18)"
+          strokeWidth="2.5"
+        />
+      </svg>
+    );
+  }
+
+  if (kind === "cup") {
+    return (
+      <svg
+        viewBox="0 0 300 120"
+        aria-hidden="true"
+        className="block h-auto w-full overflow-visible"
+        style={{ filter: shadow }}
+      >
+        <defs>
+          <linearGradient id={`cup-${finish}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={metal.light} />
+            <stop offset="48%" stopColor={metal.main} />
+            <stop offset="100%" stopColor={metal.dark} />
+          </linearGradient>
+        </defs>
+        <ellipse cx="150" cy="94" rx="103" ry="7" fill="rgba(0,0,0,.12)" />
+        <path
+          d="M58 42C78 27 222 27 242 42L226 82C208 94 92 94 74 82Z"
+          fill={`url(#cup-${finish})`}
+        />
+        <path
+          d="M78 49C104 39 196 39 222 49"
+          fill="none"
+          stroke="rgba(255,255,255,.22)"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+        <circle cx="78" cy="57" r="5" fill={metal.dark} />
+        <circle cx="222" cy="57" r="5" fill={metal.dark} />
+      </svg>
+    );
+  }
+
+  if (kind === "slim") {
+    return (
+      <svg
+        viewBox="0 0 360 90"
+        aria-hidden="true"
+        className="block h-auto w-full overflow-visible"
+        style={{ filter: shadow }}
+      >
+        <defs>
+          <linearGradient id={`slim-${finish}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={metal.light} />
+            <stop offset="42%" stopColor={metal.main} />
+            <stop offset="100%" stopColor={metal.dark} />
+          </linearGradient>
+        </defs>
+        <ellipse cx="180" cy="70" rx="132" ry="5" fill="rgba(0,0,0,.10)" />
+        <rect
+          x="40"
+          y="31"
+          width="280"
+          height="10"
+          rx="5"
+          fill={`url(#slim-${finish})`}
+        />
+        <rect x="68" y="40" width="8" height="23" rx="4" fill={metal.dark} />
+        <rect x="284" y="40" width="8" height="23" rx="4" fill={metal.dark} />
+      </svg>
+    );
+  }
+
+  if (kind === "integrated") {
+    return (
+      <svg
+        viewBox="0 0 320 100"
+        aria-hidden="true"
+        className="block h-auto w-full overflow-visible"
+        style={{ filter: shadow }}
+      >
+        <defs>
+          <linearGradient id={`integrated-${finish}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={metal.light} />
+            <stop offset="50%" stopColor={metal.main} />
+            <stop offset="100%" stopColor={metal.dark} />
+          </linearGradient>
+        </defs>
+        <ellipse cx="160" cy="79" rx="119" ry="6" fill="rgba(0,0,0,.09)" />
+        <path
+          d="M42 33H278V48H195C186 48 179 54 179 63H141C141 54 134 48 125 48H42Z"
+          fill={`url(#integrated-${finish})`}
+        />
+        <path
+          d="M141 63H179"
+          stroke={metal.dark}
+          strokeWidth="8"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
   if (kind === "arch") {
     return (
       <svg
@@ -2849,35 +3031,68 @@ function HandleButton({
   finish: HandleFinish;
   onClick: () => void;
 }) {
+  const finishLabel =
+    finish === "black"
+      ? "שחור מט"
+      : finish === "gold"
+        ? "זהב"
+        : "ניקל";
+
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-2xl border p-2 text-center transition ${
+      className={`group relative overflow-hidden rounded-2xl border bg-white p-3 text-center transition-all duration-200 ${
         active
-          ? "border-stone-900 ring-1 ring-stone-900"
-          : "border-stone-200 hover:border-stone-400"
+          ? "border-stone-900 shadow-md ring-2 ring-stone-900/10"
+          : "border-stone-200 hover:-translate-y-0.5 hover:border-stone-400 hover:shadow-sm"
       }`}
     >
-      <div className="flex h-20 items-center justify-center overflow-hidden rounded-xl bg-stone-100 p-3">
+      {active && (
+        <span className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-stone-900 text-xs text-white">
+          ✓
+        </span>
+      )}
+
+      <div
+        className={`flex h-24 items-center justify-center overflow-hidden rounded-xl border transition ${
+          active
+            ? "border-stone-300 bg-stone-100"
+            : "border-stone-100 bg-stone-50 group-hover:bg-stone-100"
+        }`}
+      >
         {item.kind === "none" ? (
-          <span className="text-xs font-medium text-stone-400">
-            ללא
-          </span>
+          <div className="flex flex-col items-center gap-2 text-stone-400">
+            <span className="text-2xl">—</span>
+            <span className="text-xs">ללא ידית</span>
+          </div>
         ) : (
-          <div className="w-full max-w-[120px]">
+          <div className="w-full max-w-[145px] px-2">
             <HandleGraphic
               kind={item.kind}
               finish={finish}
+              decorativeShadow
             />
           </div>
         )}
       </div>
 
-      <span className="mt-2 block truncate text-[11px] font-medium text-stone-600">
-        {item.name}
-      </span>
+      <div className="mt-3">
+        <p
+          className={`text-sm font-semibold ${
+            active ? "text-stone-950" : "text-stone-700"
+          }`}
+        >
+          {item.name}
+        </p>
+
+        {item.kind !== "none" && (
+          <p className="mt-1 text-[11px] text-stone-400">
+            {finishLabel}
+          </p>
+        )}
+      </div>
     </button>
   );
 }
