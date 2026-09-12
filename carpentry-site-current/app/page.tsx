@@ -265,7 +265,7 @@ export default async function HomePage() {
                 </p>
 
                 <h2 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
-                  מה אפשר לבנות?
+                  מה אפשר ליצור בשבילכם?
                 </h2>
 
                 <p className="mt-4 max-w-xl leading-7 text-stone-500">
