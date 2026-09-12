@@ -96,23 +96,23 @@ export default async function HomePage() {
 
   const categoryFallbackImages: Record<string, { url: string; alt: string }> = {
     kitchens: {
-      url: "/categories/kitchens-v2.jpg",
+      url: "/categories/details/kitchens/01.jpg",
       alt: "מטבח נגרות בהתאמה אישית",
     },
     doors: {
-      url: "/categories/doors-v2.jpg",
+      url: "/categories/details/doors/01.jpg",
       alt: "דלת עץ בעיצוב נגרות בהתאמה אישית",
     },
     "bedrooms-kids": {
-      url: "/categories/bedrooms-kids-v2.jpg",
+      url: "/categories/details/bedrooms-kids/01.jpg",
       alt: "חדר שינה וחדר ילדים בנגרות בהתאמה אישית",
     },
     "wall-cladding": {
-      url: "/categories/wall-cladding-v2.jpg",
+      url: "/categories/details/wall-cladding/01.jpg",
       alt: "חיפוי קיר בעבודת נגרות בהתאמה אישית",
     },
     custom: {
-      url: "/categories/custom-v2.jpg",
+      url: "/categories/details/custom/01.jpg",
       alt: "עבודת נגרות מיוחדת בהתאמה אישית",
     },
   };
@@ -376,7 +376,7 @@ export default async function HomePage() {
 
             <div className="max-w-md">
               <p className="text-sm leading-7 text-stone-500 md:text-base">
-                הצצה לעבודות שכבר הותקנו אצל לקוחות שלנו . תמונות מהשטח,
+                הצצה לעבודות שכבר הותקנו אצל לקוחות שלנו. תמונות מהשטח,
                 בלי סטודיו ובלי להעמיד פנים.
               </p>
 
