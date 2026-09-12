@@ -1,553 +1,496 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Heebo } from "next/font/google";
 
 import { supabasePublic } from "@/lib/supabase/public";
+import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 
-import {
-  SITE_NAME,
-  SITE_TAGLINE,
-} from "@/lib/site";
+const heebo = Heebo({
+  subsets: ["hebrew", "latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 export const instant = false;
 
-/* ========================================= */
-/* HOME PAGE */
-/* ========================================= */
-
 export default async function HomePage() {
-  const [
-    projectsResult,
-    categoriesResult,
-  ] = await Promise.all([
-    supabasePublic
-      .from("projects")
-      .select(`
-        id,
-        title,
-        slug,
-        description,
-        city,
-        featured,
-        created_at,
-
-        categories (
-          name,
-          slug
-        ),
-
-        project_images (
+  const [projectsResult, categoriesResult, categoryProjectsResult] =
+    await Promise.all([
+      supabasePublic
+        .from("projects")
+        .select(`
           id,
-          storage_path,
-          alt_text,
+          title,
+          slug,
+          description,
+          city,
+          featured,
+          created_at,
+          categories (
+            name,
+            slug
+          ),
+          project_images (
+            id,
+            storage_path,
+            alt_text,
+            sort_order
+          )
+        `)
+        .eq("published", true)
+        .eq("featured", true)
+        .order("created_at", { ascending: false })
+        .limit(6),
+
+      supabasePublic
+        .from("categories")
+        .select(`
+          id,
+          name,
+          slug,
           sort_order
-        )
-      `)
-      .eq("published", true)
-      .eq("featured", true)
-      .order("created_at", {
-        ascending: false,
-      })
-      .limit(6),
+        `)
+        .order("sort_order", { ascending: true }),
 
-    supabasePublic
-      .from("categories")
-      .select(`
-        id,
-        name,
-        slug,
-        sort_order
-      `)
-      .order("sort_order", {
-        ascending: true,
-      }),
-  ]);
+      supabasePublic
+        .from("projects")
+        .select(`
+          category_id,
+          created_at,
+          project_images (
+            id,
+            storage_path,
+            alt_text,
+            sort_order
+          )
+        `)
+        .eq("published", true)
+        .order("created_at", { ascending: false })
+        .limit(50),
+    ]);
 
-  const featuredProjects =
-    projectsResult.data ?? [];
+  const featuredProjects = projectsResult.data ?? [];
+  const categories = categoriesResult.data ?? [];
+  const categoryProjects = categoryProjectsResult.data ?? [];
 
-  const categories =
-    categoriesResult.data ?? [];
+  const categoryBackgrounds = new Map<
+    string,
+    { url: string; alt: string }
+  >();
 
-  /* ========================================= */
-  /* HERO IMAGE */
-  /* ========================================= */
+  for (const project of categoryProjects) {
+    if (!project.category_id || categoryBackgrounds.has(project.category_id)) {
+      continue;
+    }
 
-  const heroProject =
-    featuredProjects[0] ?? null;
+    const images = [...(project.project_images ?? [])].sort(
+      (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)
+    );
 
+    if (images[0]?.storage_path) {
+      categoryBackgrounds.set(project.category_id, {
+        url: getProjectImageUrl(images[0].storage_path),
+        alt: images[0].alt_text || "עבודת נגרות בהתאמה אישית",
+      });
+    }
+  }
+
+  const categoryFallbackImages: Record<string, { url: string; alt: string }> = {
+    kitchens: {
+      url: "/categories/kitchens-v2.jpg",
+      alt: "מטבח נגרות בהתאמה אישית",
+    },
+    doors: {
+      url: "/categories/doors-v2.jpg",
+      alt: "דלת עץ בעיצוב נגרות בהתאמה אישית",
+    },
+    "bedrooms-kids": {
+      url: "/categories/bedrooms-kids-v2.jpg",
+      alt: "חדר שינה וחדר ילדים בנגרות בהתאמה אישית",
+    },
+    "wall-cladding": {
+      url: "/categories/wall-cladding-v2.jpg",
+      alt: "חיפוי קיר בעבודת נגרות בהתאמה אישית",
+    },
+    custom: {
+      url: "/categories/custom-v2.jpg",
+      alt: "עבודת נגרות מיוחדת בהתאמה אישית",
+    },
+  };
+
+  const heroProject = featuredProjects[0] ?? null;
   const heroImages = heroProject
-    ? [
-        ...(heroProject.project_images ??
-          []),
-      ].sort(
-        (a, b) =>
-          (a.sort_order ?? 0) -
-          (b.sort_order ?? 0)
+    ? [...(heroProject.project_images ?? [])].sort(
+        (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)
       )
     : [];
 
   const heroImage =
     heroImages.length > 0
-      ? getProjectImageUrl(
-          heroImages[0].storage_path
-        )
+      ? getProjectImageUrl(heroImages[0].storage_path)
       : null;
 
   return (
-    <main
-      dir="rtl"
-      className="bg-[#faf9f6] text-stone-900"
-    >
-      {/* ========================================= */}
-      {/* HERO */}
-      {/* ========================================= */}
-
-      <section className="px-4 pt-4 sm:px-6 lg:px-8">
-        <div className="relative mx-auto min-h-[620px] max-w-[1500px] overflow-hidden rounded-[2rem] bg-stone-900 md:min-h-[720px]">
-          {/* Background */}
+    <main dir="rtl" className="overflow-hidden bg-[#f4f1eb] text-[#1f1f1c]">
+      <section className="px-3 pt-3 sm:px-5 sm:pt-5 lg:px-7">
+        <div className="relative mx-auto min-h-[84vh] max-w-[1600px] overflow-hidden rounded-[1.7rem] bg-stone-900 sm:rounded-[2.2rem]">
           {heroImage ? (
             <Image
               src={heroImage}
-              alt={
-                heroImages[0]?.alt_text ||
-                heroProject?.title ||
-                SITE_NAME
-              }
+              alt={heroImages[0]?.alt_text || heroProject?.title || SITE_NAME}
               fill
               priority
               sizes="100vw"
               className="object-cover"
             />
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-bl from-stone-700 via-stone-800 to-stone-950" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#6b6459_0%,#302d28_42%,#11100e_100%)]" />
           )}
 
-          {/* Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-l from-black/75 via-black/45 to-black/15" />
+          <div className="absolute inset-0 bg-gradient-to-l from-black/75 via-black/35 to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/15" />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10" />
-
-          {/* Content */}
-          <div className="relative z-10 flex min-h-[620px] items-end md:min-h-[720px]">
-            <div className="w-full px-7 pb-10 pt-28 sm:px-10 sm:pb-14 md:px-14 lg:px-20 lg:pb-20">
-              <div className="max-w-4xl">
-                <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur-md">
-                  <span className="h-2 w-2 rounded-full bg-amber-500" />
-
-                  {SITE_TAGLINE}
-                </div>
-
-                <h1 className="max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[5.5rem]">
-                  יוצרים בדיוק
-                  <br />
-                  את מה שדמיינתם.
-                </h1>
-
-                <p className="mt-7 max-w-2xl text-base leading-8 text-white/80 sm:text-lg md:text-xl">
-                  תכנון, ייצור והתקנה של
-                  עבודות נגרות בהתאמה אישית,
-                  תוך הקפדה על חומרי גלם,
-                  פונקציונליות וגימור מדויק.
-                </p>
-
-                <div className="mt-9 flex flex-wrap gap-3">
-                  <Link
-                    href="/projects"
-                    className="inline-flex min-h-13 items-center justify-center rounded-full bg-white px-7 font-medium text-stone-900 transition hover:bg-stone-100"
-                  >
-                    צפייה בעבודות
-
-                    <span className="mr-2">
-                      ←
-                    </span>
-                  </Link>
-
-                  <Link
-                    href="/contact"
-                    className="inline-flex min-h-13 items-center justify-center rounded-full border border-white/30 bg-white/10 px-7 font-medium text-white backdrop-blur-md transition hover:bg-white/20"
-                  >
-                    קבלת הצעת מחיר
-                  </Link>
-                </div>
-              </div>
-
-              {/* Highlights */}
-              <div className="mt-14 grid max-w-3xl grid-cols-1 gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/15 backdrop-blur-md sm:grid-cols-3">
-                <HeroFeature
-                  title="100%"
-                  text="התאמה אישית"
-                />
-
-                <HeroFeature
-                  title="דיוק"
-                  text="בתכנון ובביצוע"
-                />
-
-                <HeroFeature
-                  title="ליווי"
-                  text="משלב הרעיון ועד ההתקנה"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Project label */}
-          {heroProject && (
-            <Link
-              href={`/projects/${heroProject.slug}`}
-              className="absolute bottom-6 left-6 z-20 hidden max-w-xs rounded-2xl border border-white/20 bg-black/30 p-4 text-white backdrop-blur-xl transition hover:bg-black/45 lg:block"
-            >
-              <p className="text-xs text-white/60">
-                פרויקט נבחר
-              </p>
-
-              <p className="mt-1 font-medium">
-                {heroProject.title}
-              </p>
-
-              <p className="mt-2 text-xs text-white/60">
-                לצפייה בפרויקט ←
-              </p>
-            </Link>
-          )}
-        </div>
-      </section>
-
-      {/* ========================================= */}
-      {/* INTRO */}
-      {/* ========================================= */}
-
-      <section className="mx-auto max-w-7xl px-6 py-24 md:py-32">
-        <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
-          <div>
-            <p className="text-sm font-medium tracking-wide text-amber-700">
-              {SITE_NAME}
-            </p>
-
-            <h2 className="mt-4 text-3xl font-bold leading-tight md:text-4xl">
-              נגרות שמתוכננת
-              <br />
-              סביבכם.
-            </h2>
-          </div>
-
-          <div>
-            <p className="max-w-3xl text-2xl font-medium leading-[1.6] text-stone-700 md:text-3xl">
-              כל חלל שונה, ולכן גם כל
-              פרויקט מתחיל מחדש — מהמידות
-              והצרכים שלכם ועד בחירת החומר,
-              הצבע והגימור.
-            </p>
-
-            <Link
-              href="/about"
-              className="mt-8 inline-flex items-center gap-2 border-b border-stone-900 pb-1 text-sm font-medium"
-            >
-              עוד על הנגרייה
-              <span>←</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================= */}
-      {/* CATEGORIES */}
-      {/* ========================================= */}
-
-      {categories.length > 0 && (
-        <section className="border-y border-stone-200 bg-white">
-          <div className="mx-auto max-w-7xl px-6 py-24">
-            {/* Heading */}
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <div>
-                <p className="text-sm font-medium text-amber-700">
-                  תחומי עבודה
-                </p>
-
-                <h2 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
-                  מה אפשר ליצור בשבילכם?
-                </h2>
-
-                <p className="mt-4 max-w-xl leading-7 text-stone-500">
-                  בחרו תחום כדי לראות עבודות,
-                  רעיונות ופתרונות נגרות
-                  המתאימים לכם.
-                </p>
-              </div>
-
-              <Link
-                href="/projects"
-                className="rounded-full border border-stone-300 px-5 py-2.5 text-sm font-medium transition hover:bg-stone-900 hover:text-white"
-              >
-                לכל העבודות
-              </Link>
-            </div>
-
-            {/* Category Cards */}
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {categories.map(
-                (
-                  category,
-                  index
-                ) => (
-                  <Link
-                    key={category.id}
-                    href={`/projects?category=${category.slug}`}
-                    className="group relative min-h-[340px] overflow-hidden rounded-[2rem] bg-stone-900 shadow-sm transition duration-500 hover:-translate-y-1 hover:shadow-xl"
-                  >
-                    {/* Image */}
-                    <Image
-                      src={getCategoryImage(
-                        category.slug
-                      )}
-                      alt={category.name}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover transition duration-700 ease-out group-hover:scale-105"
-                    />
-
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
-
-                    {/* Subtle darkening on hover */}
-                    <div className="absolute inset-0 bg-black/0 transition duration-500 group-hover:bg-black/10" />
-
-                    {/* Top */}
-                    <div className="absolute inset-x-0 top-0 flex items-center justify-between p-6">
-                      {/* Number */}
-                      <span className="text-xs font-medium text-white/65">
-                        {String(
-                          index + 1
-                        ).padStart(
-                          2,
-                          "0"
-                        )}
-                      </span>
-
-                      {/* Arrow */}
-                      <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/10 text-lg text-white backdrop-blur-md transition duration-300 group-hover:border-white group-hover:bg-white group-hover:text-stone-900">
-                        ←
-                      </span>
+          <div className="relative z-10 flex min-h-[84vh] items-end">
+            <div className="w-full px-6 pb-8 pt-28 sm:px-10 sm:pb-12 md:px-14 lg:px-20 lg:pb-16">
+              <div className="grid items-end gap-10 lg:grid-cols-[1.35fr_.65fr]">
+                <div className="max-w-5xl">
+                  <div className="mb-8 flex flex-col items-start">
+                    <div className="rounded-[1.6rem] border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-md">
+                      <Image
+                        src="/brand/logo.png"
+                        alt={SITE_NAME}
+                        width={260}
+                        height={160}
+                        priority
+                        className="h-auto w-[150px] object-contain drop-shadow-2xl sm:w-[190px] md:w-[230px]"
+                      />
                     </div>
 
-                    {/* Bottom */}
-                    <div className="absolute inset-x-0 bottom-0 p-6 md:p-7">
-                      <h3 className="text-2xl font-bold text-white md:text-3xl">
-                        {category.name}
-                      </h3>
+                    <h1
+                      className={`${heebo.className} mt-6 text-3xl font-medium tracking-[-0.03em] text-[#f1e5d2] sm:text-4xl md:text-5xl`}
+                    >
+                      נגריית עימאד אקרם גבארין
+                    </h1>
 
-                      <p className="mt-3 max-w-sm text-sm leading-7 text-white/75">
-                        {getCategoryDescription(
-                          category.slug
-                        )}
-                      </p>
+                    <div className="mt-5 h-px w-20 bg-white/45" />
 
-                      <div className="mt-5 flex items-center gap-2 text-xs font-medium text-white/70 opacity-0 transition duration-300 group-hover:opacity-100">
-                        צפייה בעבודות
-                        <span>←</span>
-                      </div>
+                    <p className="mt-5 text-xl font-light leading-relaxed text-white/85 sm:text-2xl md:text-3xl">
+                      נגרות שמתחילה ברעיון
+                      <br className="hidden sm:block" />
+                      ונבנית בדיוק בשבילכם.
+                    </p>
+                  </div>
+
+                  <div className="mt-7 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+                    <p className="max-w-2xl text-base leading-8 text-white/75 sm:text-lg">
+                      תכנון, ייצור והתקנה של נגרות בהתאמה אישית,
+                      מטבחים, חדרים, דלתות, חיפויים ועבודות מיוחדות.
+                    </p>
+
+                    <div className="flex flex-wrap gap-3">
+                      <Link
+                        href="/projects"
+                        className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-6 text-sm font-medium text-stone-950 transition hover:scale-[1.02]"
+                      >
+                        לפרויקטים
+                        <span className="mr-2">←</span>
+                      </Link>
+
+                      <Link
+                        href="/visualizer"
+                        className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 text-sm font-medium text-white backdrop-blur-md transition hover:bg-white/20"
+                      >
+                        עצבו בעצמכם
+                      </Link>
                     </div>
-                  </Link>
-                )
+                  </div>
+                </div>
+
+                <div className="hidden justify-self-end lg:block">
+                  <div className="w-[240px] border-r border-white/25 pr-6 text-white">
+                    <p className="text-xs tracking-[0.18em] text-white/50">
+                      ATELIER / CUSTOM MADE
+                    </p>
+                    <p className="mt-4 text-2xl font-light leading-snug">
+                      חומר. קו. פרופורציה.
+                      <br />
+                      עבודת יד מדויקת.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {heroProject && (
+                <Link
+                  href={`/projects/${heroProject.slug}`}
+                  className="mt-10 inline-flex items-center gap-3 text-sm text-white/65 transition hover:text-white"
+                >
+                  <span className="h-px w-12 bg-white/40" />
+                  פרויקט נבחר: {heroProject.title}
+                </Link>
               )}
             </div>
           </div>
-        </section>
-      )}
 
-      {/* ========================================= */}
-      {/* FEATURED PROJECTS */}
-      {/* ========================================= */}
+          <div className="absolute left-6 top-6 z-20 hidden rounded-full border border-white/20 bg-black/15 px-4 py-2 text-xs text-white/70 backdrop-blur md:block">
+            {SITE_TAGLINE}
+          </div>
+        </div>
+      </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-24 md:py-32">
-        <div className="flex flex-wrap items-end justify-between gap-6">
+      <section className="mx-auto max-w-7xl px-6 py-24 md:py-36">
+        <div className="grid gap-10 lg:grid-cols-[.55fr_1.45fr]">
           <div>
-            <p className="text-sm font-medium text-amber-700">
-              פרויקטים נבחרים
+            <p className="text-xs font-medium tracking-[0.25em] text-stone-500">
+              01 / הגישה שלנו
             </p>
+          </div>
 
-            <h2 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
-              עבודות אחרונות
+          <div>
+            <h2 className="max-w-5xl text-4xl font-light leading-[1.25] tracking-tight text-stone-800 md:text-6xl">
+              אנחנו לא מתחילים ממוצר.
+              <br />
+              אנחנו מתחילים מהחלל,
+              <span className="text-stone-400"> מהשימוש ומהאדם שחי בו.</span>
+            </h2>
+
+            <div className="mt-10 flex flex-wrap gap-x-12 gap-y-5 border-t border-stone-300 pt-6 text-sm text-stone-500">
+              <span>תכנון מותאם אישית</span>
+              <span>חומרי גלם איכותיים</span>
+              <span>פרזול וגימור מדויק</span>
+              <span>ייצור והתקנה</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1450px] px-5 pb-28 sm:px-7 md:pb-36">
+        <div className="mb-12 flex items-end justify-between gap-6">
+          <div>
+            <p className="text-xs font-medium tracking-[0.25em] text-stone-500">
+              02 / תיק עבודות
+            </p>
+            <h2 className="mt-4 text-4xl font-light tracking-tight md:text-6xl">
+              פרויקטים נבחרים
             </h2>
           </div>
 
           <Link
             href="/projects"
-            className="rounded-full border border-stone-300 px-6 py-3 text-sm font-medium transition hover:bg-stone-900 hover:text-white"
+            className="hidden border-b border-stone-900 pb-1 text-sm font-medium md:inline-flex"
           >
-            לכל הפרויקטים
+            לכל הפרויקטים ←
           </Link>
         </div>
 
-        {featuredProjects.length ===
-        0 ? (
-          <div className="mt-12 rounded-3xl border border-stone-200 bg-white p-12 text-center text-stone-500">
-            בקרוב יופיעו כאן עבודות
-            נבחרות.
+        {featuredProjects.length === 0 ? (
+          <div className="rounded-3xl border border-stone-300 bg-white/50 p-12 text-center text-stone-500">
+            בקרוב יופיעו כאן עבודות נבחרות.
           </div>
         ) : (
-          <div className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2">
-            {featuredProjects
-              .slice(0, 4)
-              .map(
-                (
-                  project,
-                  index
-                ) => {
-                  const category =
-                    normalizeRelation(
-                      project.categories
-                    );
+          <div className="space-y-20 md:space-y-28">
+            {featuredProjects.slice(0, 4).map((project, index) => {
+              const category = normalizeRelation(project.categories);
+              const images = [...(project.project_images ?? [])].sort(
+                (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)
+              );
+              const imageUrl =
+                images.length > 0
+                  ? getProjectImageUrl(images[0].storage_path)
+                  : null;
+              const reverse = index % 2 === 1;
 
-                  const images = [
-                    ...(project.project_images ??
-                      []),
-                  ].sort(
-                    (a, b) =>
-                      (a.sort_order ??
-                        0) -
-                      (b.sort_order ??
-                        0)
-                  );
-
-                  const imageUrl =
-                    images.length > 0
-                      ? getProjectImageUrl(
-                          images[0]
-                            .storage_path
-                        )
-                      : null;
-
-                  return (
-                    <Link
-                      key={project.id}
-                      href={`/projects/${project.slug}`}
-                      className={`group block ${
-                        index % 2 === 1
-                          ? "md:mt-16"
-                          : ""
+              return (
+                <Link
+                  key={project.id}
+                  href={`/projects/${project.slug}`}
+                  className={`group grid gap-7 md:grid-cols-12 md:items-end ${
+                    reverse ? "md:[&>*:first-child]:order-2" : ""
+                  }`}
+                >
+                  <div className="md:col-span-8">
+                    <div
+                      className={`relative overflow-hidden rounded-[1.8rem] bg-stone-200 ${
+                        index % 3 === 0 ? "aspect-[16/10]" : "aspect-[4/3]"
                       }`}
                     >
-                      {/* Image */}
-                      <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-stone-200">
-                        {imageUrl ? (
-                          <Image
-                            src={imageUrl}
-                            alt={
-                              images[0]
-                                ?.alt_text ||
-                              project.title
-                            }
-                            fill
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="object-cover transition duration-700 group-hover:scale-[1.04]"
-                          />
-                        ) : (
-                          <div className="flex h-full items-center justify-center text-stone-400">
-                            אין תמונה
-                          </div>
-                        )}
-
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-0 transition group-hover:opacity-100" />
-
-                        <span className="absolute bottom-5 left-5 flex h-12 w-12 translate-y-3 items-center justify-center rounded-full bg-white text-stone-900 opacity-0 shadow-lg transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                          ←
-                        </span>
-                      </div>
-
-                      {/* Info */}
-                      <div className="mt-5 flex items-start justify-between gap-6">
-                        <div>
-                          {category && (
-                            <p className="text-sm text-stone-500">
-                              {
-                                category.name
-                              }
-                            </p>
-                          )}
-
-                          <h3 className="mt-1 text-2xl font-bold tracking-tight transition group-hover:text-amber-700">
-                            {project.title}
-                          </h3>
-
-                          {project.city && (
-                            <p className="mt-2 text-sm text-stone-500">
-                              {
-                                project.city
-                              }
-                            </p>
-                          )}
+                      {imageUrl ? (
+                        <Image
+                          src={imageUrl}
+                          alt={images[0]?.alt_text || project.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 70vw"
+                          className="object-cover transition duration-1000 ease-out group-hover:scale-[1.035]"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-stone-400">
+                          אין תמונה
                         </div>
+                      )}
 
-                        <span className="pt-1 text-sm text-stone-400">
-                          {String(
-                            index + 1
-                          ).padStart(
-                            2,
-                            "0"
-                          )}
-                        </span>
-                      </div>
-                    </Link>
-                  );
-                }
-              )}
+                      <div className="absolute inset-0 bg-black/0 transition duration-500 group-hover:bg-black/10" />
+
+                      <span className="absolute left-5 top-5 text-[5rem] font-light leading-none tracking-[-0.08em] text-white/60 md:text-[7rem]">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div
+                    className={`md:col-span-4 ${
+                      reverse ? "md:pr-8" : "md:pl-8"
+                    }`}
+                  >
+                    {category && (
+                      <p className="text-xs font-medium tracking-[0.2em] text-stone-500">
+                        {category.name}
+                      </p>
+                    )}
+
+                    <h3 className="mt-3 text-3xl font-light leading-tight tracking-tight md:text-4xl">
+                      {project.title}
+                    </h3>
+
+                    {project.description && (
+                      <p className="mt-4 line-clamp-3 leading-7 text-stone-500">
+                        {project.description}
+                      </p>
+                    )}
+
+                    <div className="mt-6 flex items-center justify-between border-t border-stone-300 pt-4 text-sm">
+                      <span className="text-stone-500">
+                        {project.city || "פרויקט בהתאמה אישית"}
+                      </span>
+                      <span className="transition group-hover:-translate-x-1">
+                        ←
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </section>
 
-      {/* ========================================= */}
-      {/* MATERIAL VISUALIZER */}
-      {/* ========================================= */}
+      {categories.length > 0 && (
+        <section className="bg-[#1d1c19] text-white">
+          <div className="mx-auto max-w-[1450px] px-6 py-24 md:py-32">
+            <div className="grid gap-10 lg:grid-cols-[.6fr_1.4fr]">
+              <div>
+                <p className="text-xs font-medium tracking-[0.25em] text-white/45">
+                  03 / תחומי עבודה
+                </p>
 
-      <section className="px-4 py-4 sm:px-6 lg:px-8">
-        <div className="relative mx-auto max-w-[1500px] overflow-hidden rounded-[2rem] bg-stone-950 shadow-sm md:min-h-[520px]">
-          <div className="relative aspect-[16/9] w-full bg-stone-100 md:absolute md:inset-0 md:aspect-auto">
-            <Image
-              src="/visualizer-bg.png"
-              alt="הדמיית שילובי עץ, צבעים וחומרים"
-              fill
-              sizes="100vw"
-              className="object-contain md:object-cover"
-            />
-          </div>
-
-          <div className="hidden md:absolute md:inset-0 md:block md:bg-gradient-to-l md:from-black/90 md:via-black/60 md:to-black/25" />
-          <div className="hidden md:absolute md:inset-0 md:block md:bg-gradient-to-t md:from-black/55 md:via-transparent md:to-black/10" />
-
-          <div className="relative z-10 flex items-center px-7 py-10 sm:px-10 md:min-h-[520px] md:px-16 md:py-16 lg:px-20">
-            <div className="max-w-2xl text-white">
-              <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-black/20 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
-                <span className="h-2 w-2 rounded-full bg-amber-500" />
-                הדמיית חומרים אינטראקטיבית
+                <h2 className="mt-5 text-4xl font-light leading-tight md:text-5xl">
+                  נגרות לכל
+                  <br />
+                  חלק בבית.
+                </h2>
               </div>
 
-              <h2 className="mt-7 text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl">
-                לפני שבוחרים,
+              <div className="divide-y divide-white/15 border-y border-white/15">
+                {categories.map((category, index) => {
+                  const categoryImageOrder = [
+                    categoryFallbackImages.kitchens,
+                    categoryFallbackImages.doors,
+                    categoryFallbackImages["bedrooms-kids"],
+                    categoryFallbackImages["wall-cladding"],
+                    categoryFallbackImages.custom,
+                  ];
+
+                  const background = categoryImageOrder[index];
+
+                  return (
+                    <Link
+                      key={category.id}
+                      href={`/projects?category=${category.slug}`}
+                      className="group relative grid min-h-[150px] grid-cols-[55px_1fr_auto] items-center gap-4 overflow-hidden px-4 py-7 transition md:min-h-[175px] md:grid-cols-[90px_1fr_auto] md:px-6 md:py-8"
+                    >
+                      {background && (
+                        <>
+                          <Image
+                            src={background.url}
+                            alt={background.alt}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 70vw"
+                            className="object-cover opacity-35 transition duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-50"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-l from-black/88 via-black/58 to-black/28" />
+                        </>
+                      )}
+
+                      {!background && (
+                        <div className="absolute inset-0 bg-gradient-to-l from-stone-900 via-stone-900/95 to-stone-800/85" />
+                      )}
+
+                      <span className="relative z-10 text-sm text-white/55">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      <div className="relative z-10">
+                        <h3 className="text-2xl font-light text-white drop-shadow-sm md:text-4xl">
+                          {category.name}
+                        </h3>
+                        <p className="mt-2 hidden max-w-xl text-sm leading-6 text-white/70 sm:block">
+                          {getCategoryDescription(category.slug)}
+                        </p>
+                      </div>
+
+                      <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-black/10 text-lg text-white backdrop-blur-sm transition duration-300 group-hover:bg-white group-hover:text-stone-900">
+                        ←
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="px-3 py-3 sm:px-5 sm:py-5 lg:px-7">
+        <div className="relative mx-auto min-h-[600px] max-w-[1600px] overflow-hidden rounded-[1.7rem] bg-stone-950 sm:rounded-[2.2rem]">
+          <Image
+            src="/visualizer-bg.png"
+            alt="הדמיית שילובי עץ, צבעים ופרזול"
+            fill
+            sizes="100vw"
+            className="object-cover opacity-80"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-black/62 to-black/20" />
+
+          <div className="relative z-10 flex min-h-[600px] items-center px-7 py-16 sm:px-10 md:px-16 lg:px-20">
+            <div className="max-w-3xl text-white">
+              <p className="text-xs font-medium tracking-[0.25em] text-white/55">
+                04 / DESIGN LAB
+              </p>
+
+              <h2 className="mt-6 text-5xl font-light leading-[1.02] tracking-tight sm:text-6xl md:text-7xl">
+                לא רק לדמיין.
                 <br />
-                רואים איך זה משתלב.
+                לראות לפני שבוחרים.
               </h2>
 
-              <p className="mt-6 max-w-xl text-lg leading-8 text-white/75">
-                שלבו סוגי עץ, צבעים, חזיתות וידיות וקבלו המחשה מיידית של הכיוון העיצובי שמתאים לפרויקט שלכם.
+              <p className="mt-7 max-w-xl text-lg leading-8 text-white/70">
+                בחרו סוג עץ, צבע, חזית וידיות וקבלו המחשה מיידית של
+                הכיוון העיצובי שמתאים לכם.
               </p>
 
               <div className="mt-9 flex flex-wrap gap-3">
                 <Link
                   href="/visualizer"
-                  className="inline-flex min-h-14 items-center justify-center rounded-full bg-white px-7 font-medium text-stone-950 transition hover:bg-amber-500 hover:text-white"
+                  className="inline-flex min-h-14 items-center justify-center rounded-full bg-white px-7 font-medium text-stone-950 transition hover:scale-[1.02]"
                 >
-                  פתחו את הדמיית החומרים
-                  <span className="mr-2" aria-hidden="true">
-                    ←
-                  </span>
+                  פתיחת ה-Visualizer
+                  <span className="mr-2">←</span>
                 </Link>
 
                 <Link
                   href="/projects"
-                  className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/30 bg-black/20 px-7 font-medium text-white backdrop-blur-md transition hover:bg-white/10"
+                  className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/25 bg-white/5 px-7 font-medium text-white backdrop-blur transition hover:bg-white/10"
                 >
-                  השראה מהפרויקטים
+                  קבלו השראה
                 </Link>
               </div>
             </div>
@@ -555,93 +498,68 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ========================================= */}
-      {/* PROCESS */}
-      {/* ========================================= */}
+      <section className="mx-auto max-w-7xl px-6 py-24 md:py-36">
+        <div className="grid gap-14 lg:grid-cols-[.7fr_1.3fr]">
+          <div>
+            <p className="text-xs font-medium tracking-[0.25em] text-stone-500">
+              05 / תהליך העבודה
+            </p>
+            <h2 className="mt-5 text-4xl font-light leading-tight md:text-6xl">
+              ארבעה שלבים.
+              <br />
+              תוצאה אחת מדויקת.
+            </h2>
+          </div>
 
-      <section className="bg-stone-900 text-white">
-        <div className="mx-auto max-w-7xl px-6 py-24 md:py-32">
-          <div className="grid gap-14 lg:grid-cols-[0.7fr_1.3fr]">
-            <div>
-              <p className="text-sm font-medium text-amber-500">
-                תהליך העבודה
-              </p>
-
-              <h2 className="mt-4 text-4xl font-bold leading-tight md:text-5xl">
-                מרעיון
-                <br />
-                ועד התקנה.
-              </h2>
-
-              <p className="mt-6 max-w-sm leading-7 text-stone-400">
-                תהליך מסודר שמאפשר להגיע
-                לתוצאה שמתאימה לחלל,
-                לצרכים ולסגנון שלכם.
-              </p>
-            </div>
-
-            <div>
-              <ProcessRow
-                number="01"
-                title="היכרות ומדידה"
-                text="מבינים את הצורך, החלל, המידות והכיוון העיצובי."
-              />
-
-              <ProcessRow
-                number="02"
-                title="תכנון ובחירת חומרים"
-                text="בוחרים מבנה, חומרי גלם, צבעים, גימורים ופרטים."
-              />
-
-              <ProcessRow
-                number="03"
-                title="ייצור"
-                text="הפרויקט עובר לייצור בהתאם לתכנון ולמידות."
-              />
-
-              <ProcessRow
-                number="04"
-                title="הובלה והתקנה"
-                text="התקנה מדויקת וגימור סופי בבית או בעסק."
-                last
-              />
-            </div>
+          <div className="border-t border-stone-300">
+            <ProcessRow
+              number="01"
+              title="היכרות ומדידה"
+              text="מבינים את החלל, הצרכים, המידות והכיוון העיצובי."
+            />
+            <ProcessRow
+              number="02"
+              title="תכנון ובחירת חומרים"
+              text="מגבשים מבנה, חומרים, צבעים, גימורים ופרזול."
+            />
+            <ProcessRow
+              number="03"
+              title="ייצור"
+              text="הפרויקט עובר לייצור בהתאם לתכנון ולמידות שסוכמו."
+            />
+            <ProcessRow
+              number="04"
+              title="התקנה וגימור"
+              text="הובלה, התקנה וגימור סופי בבית או בעסק."
+              last
+            />
           </div>
         </div>
       </section>
 
-      {/* ========================================= */}
-      {/* FINAL CTA */}
-      {/* ========================================= */}
-
-      <section className="px-4 py-4 sm:px-6 lg:px-8">
-        <div className="mx-auto flex min-h-[430px] max-w-[1500px] items-center justify-center overflow-hidden rounded-[2rem] bg-amber-700 px-6 py-20 text-center text-white">
-          <div className="max-w-3xl">
-            <p className="text-sm font-medium text-white/70">
-              מתחילים פרויקט חדש?
+      <section className="px-3 pb-3 sm:px-5 sm:pb-5 lg:px-7">
+        <div className="mx-auto flex min-h-[520px] max-w-[1600px] items-center justify-center overflow-hidden rounded-[1.7rem] bg-[#b88655] px-6 py-20 text-center text-white sm:rounded-[2.2rem]">
+          <div className="max-w-4xl">
+            <p className="text-xs font-medium tracking-[0.25em] text-white/65">
+              יש לכם רעיון?
             </p>
 
-            <h2 className="mt-5 text-4xl font-bold leading-tight md:text-6xl">
-              בואו נהפוך את הרעיון
+            <h2 className="mt-6 text-5xl font-light leading-[1.03] tracking-tight sm:text-6xl md:text-7xl">
+              בואו נהפוך אותו
               <br />
-              שלכם למציאות.
+              לחלל שחיים בו.
             </h2>
 
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-white/80">
-              ספרו לנו מה אתם רוצים לבנות
-              ונחזור אליכם כדי להתחיל
-              לתכנן.
+            <p className="mx-auto mt-7 max-w-xl text-lg leading-8 text-white/80">
+              ספרו לנו מה אתם רוצים לבנות ונחזור אליכם כדי להתחיל לתכנן.
             </p>
 
             <Link
               href="/contact"
-              className="mt-9 inline-flex min-h-14 items-center justify-center rounded-full bg-white px-8 font-medium text-stone-900 transition hover:scale-[1.03]"
+              className="mt-10 inline-flex min-h-14 items-center justify-center rounded-full bg-white px-8 font-medium text-stone-950 transition hover:scale-[1.03]"
             >
-              קבלת הצעת מחיר
-
-              <span className="mr-2">
-                ←
-              </span>
+              מתחילים פרויקט
+              <span className="mr-2">←</span>
             </Link>
           </div>
         </div>
@@ -649,34 +567,6 @@ export default async function HomePage() {
     </main>
   );
 }
-
-/* ========================================= */
-/* HERO FEATURE */
-/* ========================================= */
-
-function HeroFeature({
-  title,
-  text,
-}: {
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="bg-black/20 px-5 py-5 text-white">
-      <p className="text-xl font-bold">
-        {title}
-      </p>
-
-      <p className="mt-1 text-xs text-white/65">
-        {text}
-      </p>
-    </div>
-  );
-}
-
-/* ========================================= */
-/* PROCESS ROW */
-/* ========================================= */
 
 function ProcessRow({
   number,
@@ -691,140 +581,55 @@ function ProcessRow({
 }) {
   return (
     <div
-      className={`grid gap-5 py-7 sm:grid-cols-[70px_1fr_1.2fr] sm:items-start ${
-        !last
-          ? "border-b border-white/15"
-          : ""
+      className={`grid gap-5 py-7 sm:grid-cols-[70px_1fr_1.25fr] sm:items-start ${
+        !last ? "border-b border-stone-300" : ""
       }`}
     >
-      <span className="text-sm text-stone-500">
-        {number}
-      </span>
-
-      <h3 className="text-xl font-medium">
-        {title}
-      </h3>
-
-      <p className="leading-7 text-stone-400">
-        {text}
-      </p>
+      <span className="text-sm text-stone-400">{number}</span>
+      <h3 className="text-xl font-medium">{title}</h3>
+      <p className="leading-7 text-stone-500">{text}</p>
     </div>
   );
 }
 
-/* ========================================= */
-/* RELATION NORMALIZER */
-/* ========================================= */
-
 function normalizeRelation(
   relation:
-    | {
-        name: string;
-        slug: string;
-      }
-    | {
-        name: string;
-        slug: string;
-      }[]
+    | { name: string; slug: string }
+    | { name: string; slug: string }[]
     | null
     | undefined
 ) {
-  if (!relation) {
-    return null;
-  }
-
-  if (Array.isArray(relation)) {
-    return relation[0] ?? null;
-  }
-
+  if (!relation) return null;
+  if (Array.isArray(relation)) return relation[0] ?? null;
   return relation;
 }
 
-/* ========================================= */
-/* PROJECT IMAGE FROM SUPABASE */
-/* ========================================= */
-
-function getProjectImageUrl(
-  storagePath: string
-) {
-  const { data } =
-    supabasePublic.storage
-      .from("project-images")
-      .getPublicUrl(storagePath);
+function getProjectImageUrl(storagePath: string) {
+  const { data } = supabasePublic.storage
+    .from("project-images")
+    .getPublicUrl(storagePath);
 
   return data.publicUrl;
 }
 
-/* ========================================= */
-/* CATEGORY IMAGE */
-/* ========================================= */
-
-function getCategoryImage(
-  slug: string
-) {
-  const images: Record<
-    string,
-    string
-  > = {
-    kitchens:
-      "/categories/kitchens.jpg",
-
-    cabinets:
-      "/categories/cabinets.jpg",
-
-    tables:
-      "/categories/tables.png",
-
-    "wall-units":
-      "/categories/wall-units.png",
-
-    doors:
-      "/categories/doors.jpg",
-
-    "wall-cladding":
-      "/categories/wall-cladding.png",
-
-    custom:
-      "/categories/custom.png",
-  };
-
-  return (
-    images[slug] ||
-    "/categories/custom.jpg"
-  );
-}
-
-/* ========================================= */
-/* CATEGORY DESCRIPTION */
-/* ========================================= */
-
-function getCategoryDescription(
-  slug: string
-) {
-  const descriptions: Record<
-    string,
-    string
-  > = {
+function getCategoryDescription(slug: string) {
+  const descriptions: Record<string, string> = {
     kitchens:
       "מטבחים בהתאמה אישית, מתכנון החלל ועד הפרטים הקטנים.",
-
     cabinets:
       "פתרונות אחסון וארונות המותאמים בדיוק למידות ולצרכים.",
-
     tables:
       "שולחנות ופריטי נגרות שמשלבים פונקציונליות ועיצוב.",
-
     "wall-units":
       "ספריות, מזנונים ופתרונות מעוצבים לסלון ולחללי אירוח.",
-
     doors:
       "דלתות בהתאמה אישית במגוון חומרים, גוונים וגימורים.",
-
     "wall-cladding":
       "חיפויי קיר ואלמנטים דקורטיביים שמעניקים לחלל אופי.",
-
     custom:
       "עבודות מיוחדות ופתרונות נגרות שנבנים לפי הרעיון שלכם.",
+    "bedrooms-kids":
+      "חדרי שינה וילדים בהתאמה אישית, עם תכנון חכם וניצול נכון של החלל.",
   };
 
   return (
