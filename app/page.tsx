@@ -129,6 +129,28 @@ export default async function HomePage() {
       ? getProjectImageUrl(heroImages[0].storage_path)
       : null;
 
+
+  const customerGallery = featuredProjects
+    .flatMap((project) => {
+      const category = normalizeRelation(project.categories);
+      const images = [...(project.project_images ?? [])].sort(
+        (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)
+      );
+
+      return images
+        .filter((image) => Boolean(image.storage_path))
+        .map((image) => ({
+          id: `${project.id}-${image.id}`,
+          projectTitle: project.title,
+          projectSlug: project.slug,
+          city: project.city,
+          categoryName: category?.name ?? null,
+          imageUrl: getProjectImageUrl(image.storage_path),
+          alt: image.alt_text || project.title,
+        }));
+    })
+    .slice(0, 10);
+
   return (
     <main dir="rtl" className="overflow-hidden bg-[#f4f1eb] text-[#1f1f1c]">
       <section className="px-3 pt-3 sm:px-5 sm:pt-5 lg:px-7">
@@ -225,7 +247,6 @@ export default async function HomePage() {
                   className="mt-10 inline-flex items-center gap-3 text-sm text-white/65 transition hover:text-white"
                 >
                   <span className="h-px w-12 bg-white/40" />
-                  פרויקט נבחר: {heroProject.title}
                 </Link>
               )}
             </div>
@@ -237,11 +258,94 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {categories.length > 0 && (
+        <section className="mx-3 mt-5 overflow-hidden rounded-[1.7rem] bg-[#1d1c19] text-white sm:mx-5 sm:mt-6 sm:rounded-[2.2rem] lg:mx-7 lg:mt-7">
+          <div className="mx-auto max-w-[1450px] px-6 py-24 md:py-32">
+            <div className="grid gap-10 lg:grid-cols-[.6fr_1.4fr]">
+              <div>
+                <p className="text-xs font-medium tracking-[0.25em] text-white/45">
+                  01 / תחומי עבודה
+                </p>
+
+                <div className="mt-5 h-px w-14 bg-[#c79a6a]" />
+                <h2 className="mt-6 text-4xl font-light leading-tight tracking-[-0.03em] md:text-5xl">
+                  נגרות לכל
+                  <br />
+                  חלק בבית.
+                </h2>
+                <p className="mt-6 max-w-xs text-sm leading-7 text-white/50">
+                  עבודות נגרות בהתאמה אישית, עם דגש על חומר, פרופורציה וגימור מדויק.
+                </p>
+              </div>
+
+              <div className="divide-y divide-white/10 border-y border-white/15">
+                {categories.map((category, index) => {
+                  const categoryImageOrder = [
+                    categoryFallbackImages.kitchens,
+                    categoryFallbackImages.doors,
+                    categoryFallbackImages["bedrooms-kids"],
+                    categoryFallbackImages["wall-cladding"],
+                    categoryFallbackImages.custom,
+                  ];
+
+                  const background = categoryImageOrder[index];
+
+                  return (
+                    <Link
+                      key={category.id}
+                      href={`/projects?category=${category.slug}`}
+                      className="group relative grid min-h-[165px] grid-cols-[55px_1fr_auto] items-center gap-4 overflow-hidden px-4 py-7 transition md:min-h-[190px] md:grid-cols-[90px_1fr_auto] md:px-7 md:py-9"
+                    >
+                      {background && (
+                        <>
+                          <Image
+                            src={background.url}
+                            alt={background.alt}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 70vw"
+                            className="object-cover opacity-40 transition duration-1000 ease-out group-hover:scale-[1.055] group-hover:opacity-52"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-black/72 to-black/48 transition duration-700 group-hover:from-black/84 group-hover:via-black/64 group-hover:to-black/40" />
+                          <div className="absolute inset-0 bg-black/10 transition duration-500 group-hover:bg-transparent" />
+                        </>
+                      )}
+
+                      {!background && (
+                        <div className="absolute inset-0 bg-gradient-to-l from-stone-950 via-stone-900 to-stone-800" />
+                      )}
+
+                      <div className="absolute inset-y-0 right-0 w-[3px] scale-y-0 bg-[#c79a6a] transition-transform duration-500 ease-out group-hover:scale-y-100" />
+
+                      <span className="relative z-10 text-sm font-medium tracking-[0.16em] text-[#d7b58c]/75 transition duration-300 group-hover:text-[#e2c29d]">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      <div className="relative z-10">
+                        <h3 className="text-3xl font-medium tracking-[-0.02em] text-white drop-shadow-md transition duration-300 group-hover:translate-x-[-3px] md:text-[2.7rem]">
+                          {category.name}
+                        </h3>
+                        <p className="mt-3 hidden max-w-xl text-sm leading-7 text-white/78 drop-shadow-sm sm:block md:text-[15px]">
+                          {getCategoryDescription(category.slug)}
+                        </p>
+                      </div>
+
+                      <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-white/35 bg-black/20 text-lg text-white shadow-lg backdrop-blur-md transition duration-300 group-hover:-translate-x-1 group-hover:border-[#d7b58c] group-hover:bg-[#d7b58c] group-hover:text-[#1d1c19]">
+                        ←
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="mx-auto max-w-7xl px-6 py-24 md:py-36">
         <div className="grid gap-10 lg:grid-cols-[.55fr_1.45fr]">
           <div>
             <p className="text-xs font-medium tracking-[0.25em] text-stone-500">
-              01 / הגישה שלנו
+              02 / הגישה שלנו
             </p>
           </div>
 
@@ -263,104 +367,100 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1450px] px-5 pb-28 sm:px-7 md:pb-36">
-        <div className="mb-12 flex items-end justify-between gap-6">
-          <div>
-            <p className="text-xs font-medium tracking-[0.25em] text-stone-500">
-              02 / תיק עבודות
-            </p>
-            <h2 className="mt-4 text-4xl font-light tracking-tight md:text-6xl">
-              פרויקטים נבחרים
-            </h2>
-          </div>
+      <section className="mx-auto max-w-[1500px] px-3 pb-28 sm:px-5 md:pb-36">
+        <div className="mb-10 px-3 sm:px-4 md:mb-14">
+          <div className="flex flex-col gap-7 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-xs font-medium tracking-[0.25em] text-stone-500">
+                03 / תמונות מלקוחות שלנו
+              </p>
 
-          <Link
-            href="/projects"
-            className="hidden border-b border-stone-900 pb-1 text-sm font-medium md:inline-flex"
-          >
-            לכל הפרויקטים ←
-          </Link>
+              <h2 className="mt-4 text-4xl font-light tracking-tight md:text-6xl">
+                בתים אמיתיים.
+                <br />
+                <span className="text-stone-400">נגרות שחיה בתוך הבית.</span>
+              </h2>
+            </div>
+
+            <div className="max-w-md">
+              <p className="text-sm leading-7 text-stone-500 md:text-base">
+                הצצה לעבודות שכבר הותקנו אצל לקוחות שלנו — תמונות מהשטח,
+                בלי סטודיו ובלי להעמיד פנים.
+              </p>
+
+              <Link
+                href="/projects"
+                className="mt-5 inline-flex items-center gap-2 border-b border-stone-900 pb-1 text-sm font-medium"
+              >
+                לכל התמונות
+                <span>←</span>
+              </Link>
+            </div>
+          </div>
         </div>
 
-        {featuredProjects.length === 0 ? (
-          <div className="rounded-3xl border border-stone-300 bg-white/50 p-12 text-center text-stone-500">
-            בקרוב יופיעו כאן עבודות נבחרות.
+        {customerGallery.length === 0 ? (
+          <div className="mx-3 rounded-[2rem] border border-stone-300 bg-white/55 p-12 text-center text-stone-500">
+            בקרוב יופיעו כאן תמונות מבתים של לקוחות.
           </div>
         ) : (
-          <div className="space-y-20 md:space-y-28">
-            {featuredProjects.slice(0, 4).map((project, index) => {
-              const category = normalizeRelation(project.categories);
-              const images = [...(project.project_images ?? [])].sort(
-                (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)
-              );
-              const imageUrl =
-                images.length > 0
-                  ? getProjectImageUrl(images[0].storage_path)
-                  : null;
-              const reverse = index % 2 === 1;
+          <div className="grid auto-rows-[105px] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[135px] sm:gap-4 md:grid-cols-12 md:auto-rows-[72px]">
+            {customerGallery.map((item, index) => {
+              const layouts = [
+                "col-span-2 row-span-3 md:col-span-7 md:row-span-6",
+                "col-span-1 row-span-2 md:col-span-5 md:row-span-4",
+                "col-span-1 row-span-2 md:col-span-5 md:row-span-5",
+                "col-span-2 row-span-3 md:col-span-4 md:row-span-5",
+                "col-span-1 row-span-2 md:col-span-4 md:row-span-4",
+                "col-span-1 row-span-2 md:col-span-4 md:row-span-4",
+                "col-span-2 row-span-3 md:col-span-8 md:row-span-6",
+                "col-span-1 row-span-2 md:col-span-4 md:row-span-3",
+                "col-span-1 row-span-2 md:col-span-4 md:row-span-3",
+                "col-span-2 row-span-3 md:col-span-8 md:row-span-5",
+              ];
 
               return (
                 <Link
-                  key={project.id}
-                  href={`/projects/${project.slug}`}
-                  className={`group grid gap-7 md:grid-cols-12 md:items-end ${
-                    reverse ? "md:[&>*:first-child]:order-2" : ""
-                  }`}
+                  key={item.id}
+                  href={`/projects/${item.projectSlug}`}
+                  className={`group relative overflow-hidden rounded-[1.35rem] bg-stone-200 shadow-[0_18px_55px_rgba(53,45,36,0.08)] sm:rounded-[1.7rem] ${layouts[index % layouts.length]}`}
                 >
-                  <div className="md:col-span-8">
-                    <div
-                      className={`relative overflow-hidden rounded-[1.8rem] bg-stone-200 ${
-                        index % 3 === 0 ? "aspect-[16/10]" : "aspect-[4/3]"
-                      }`}
-                    >
-                      {imageUrl ? (
-                        <Image
-                          src={imageUrl}
-                          alt={images[0]?.alt_text || project.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 70vw"
-                          className="object-cover transition duration-1000 ease-out group-hover:scale-[1.035]"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-stone-400">
-                          אין תמונה
-                        </div>
-                      )}
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 60vw"
+                    className="object-cover transition duration-1000 ease-out group-hover:scale-[1.045]"
+                  />
 
-                      <div className="absolute inset-0 bg-black/0 transition duration-500 group-hover:bg-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/5 to-transparent opacity-75 transition duration-500 group-hover:opacity-90" />
 
-                      <span className="absolute left-5 top-5 text-[5rem] font-light leading-none tracking-[-0.08em] text-white/60 md:text-[7rem]">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                    </div>
+                  <div className="absolute right-4 top-4 flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-3 py-1.5 text-[11px] text-white/85 backdrop-blur-md sm:right-5 sm:top-5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#d7b58c]" />
+                    מהבית של הלקוח
                   </div>
 
-                  <div
-                    className={`md:col-span-4 ${
-                      reverse ? "md:pr-8" : "md:pl-8"
-                    }`}
-                  >
-                    {category && (
-                      <p className="text-xs font-medium tracking-[0.2em] text-stone-500">
-                        {category.name}
+                  <div className="absolute inset-x-0 bottom-0 p-4 text-white sm:p-5 md:p-6">
+                    {item.categoryName && (
+                      <p className="mb-1 text-[11px] font-medium tracking-[0.16em] text-white/60">
+                        {item.categoryName}
                       </p>
                     )}
 
-                    <h3 className="mt-3 text-3xl font-light leading-tight tracking-tight md:text-4xl">
-                      {project.title}
-                    </h3>
+                    <div className="flex items-end justify-between gap-4">
+                      <div>
+                        <h3 className="text-lg font-medium leading-tight sm:text-xl">
+                          {item.projectTitle}
+                        </h3>
 
-                    {project.description && (
-                      <p className="mt-4 line-clamp-3 leading-7 text-stone-500">
-                        {project.description}
-                      </p>
-                    )}
+                        {item.city && (
+                          <p className="mt-1 text-xs text-white/65">
+                            {item.city}
+                          </p>
+                        )}
+                      </div>
 
-                    <div className="mt-6 flex items-center justify-between border-t border-stone-300 pt-4 text-sm">
-                      <span className="text-stone-500">
-                        {project.city || "פרויקט בהתאמה אישית"}
-                      </span>
-                      <span className="transition group-hover:-translate-x-1">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/10 text-sm backdrop-blur-sm transition duration-300 group-hover:-translate-x-1 group-hover:bg-white group-hover:text-stone-900">
                         ←
                       </span>
                     </div>
@@ -370,83 +470,13 @@ export default async function HomePage() {
             })}
           </div>
         )}
+
+        <div className="mt-5 flex items-center justify-center gap-3 text-xs text-stone-400">
+          <span className="h-px w-10 bg-stone-300" />
+          תמונות מתוך עבודות שבוצעו והותקנו אצל לקוחות
+          <span className="h-px w-10 bg-stone-300" />
+        </div>
       </section>
-
-      {categories.length > 0 && (
-        <section className="bg-[#1d1c19] text-white">
-          <div className="mx-auto max-w-[1450px] px-6 py-24 md:py-32">
-            <div className="grid gap-10 lg:grid-cols-[.6fr_1.4fr]">
-              <div>
-                <p className="text-xs font-medium tracking-[0.25em] text-white/45">
-                  03 / תחומי עבודה
-                </p>
-
-                <h2 className="mt-5 text-4xl font-light leading-tight md:text-5xl">
-                  נגרות לכל
-                  <br />
-                  חלק בבית.
-                </h2>
-              </div>
-
-              <div className="divide-y divide-white/15 border-y border-white/15">
-                {categories.map((category, index) => {
-                  const categoryImageOrder = [
-                    categoryFallbackImages.kitchens,
-                    categoryFallbackImages.doors,
-                    categoryFallbackImages["bedrooms-kids"],
-                    categoryFallbackImages["wall-cladding"],
-                    categoryFallbackImages.custom,
-                  ];
-
-                  const background = categoryImageOrder[index];
-
-                  return (
-                    <Link
-                      key={category.id}
-                      href={`/projects?category=${category.slug}`}
-                      className="group relative grid min-h-[150px] grid-cols-[55px_1fr_auto] items-center gap-4 overflow-hidden px-4 py-7 transition md:min-h-[175px] md:grid-cols-[90px_1fr_auto] md:px-6 md:py-8"
-                    >
-                      {background && (
-                        <>
-                          <Image
-                            src={background.url}
-                            alt={background.alt}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 70vw"
-                            className="object-cover opacity-35 transition duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-50"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-l from-black/88 via-black/58 to-black/28" />
-                        </>
-                      )}
-
-                      {!background && (
-                        <div className="absolute inset-0 bg-gradient-to-l from-stone-900 via-stone-900/95 to-stone-800/85" />
-                      )}
-
-                      <span className="relative z-10 text-sm text-white/55">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-
-                      <div className="relative z-10">
-                        <h3 className="text-2xl font-light text-white drop-shadow-sm md:text-4xl">
-                          {category.name}
-                        </h3>
-                        <p className="mt-2 hidden max-w-xl text-sm leading-6 text-white/70 sm:block">
-                          {getCategoryDescription(category.slug)}
-                        </p>
-                      </div>
-
-                      <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-black/10 text-lg text-white backdrop-blur-sm transition duration-300 group-hover:bg-white group-hover:text-stone-900">
-                        ←
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       <section className="px-3 py-3 sm:px-5 sm:py-5 lg:px-7">
         <div className="relative mx-auto min-h-[600px] max-w-[1600px] overflow-hidden rounded-[1.7rem] bg-stone-950 sm:rounded-[2.2rem]">
