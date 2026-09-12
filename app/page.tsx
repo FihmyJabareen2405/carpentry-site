@@ -336,27 +336,44 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="mx-auto max-w-7xl px-6 py-24 md:py-36">
-        <div className="grid gap-10 lg:grid-cols-[.55fr_1.45fr]">
-          <div>
-            <p className="text-xs font-medium tracking-[0.25em] text-stone-500">
-              02 / הגישה שלנו
-            </p>
-          </div>
+      <section className="px-3 py-6 sm:px-5 sm:py-8 lg:px-7">
+        <div className="relative mx-auto min-h-[560px] max-w-[1600px] overflow-hidden rounded-[1.7rem] bg-stone-900 sm:rounded-[2.2rem]">
+          <Image
+            src="/home/approach-bg.png"
+            alt="תכנון נגרות בהתאמה אישית"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
 
-          <div>
-            <h2 className="max-w-5xl text-4xl font-light leading-[1.25] tracking-tight text-stone-800 md:text-6xl">
-              אנחנו לא מתחילים ממוצר.
-              <br />
-              אנחנו מתחילים מהחלל,
-              <span className="text-stone-400"> מהשימוש ומהאדם שחי בו.</span>
-            </h2>
+          <div className="absolute inset-0 bg-gradient-to-l from-black/82 via-black/52 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/62 via-transparent to-black/10" />
 
-            <div className="mt-10 flex flex-wrap gap-x-12 gap-y-5 border-t border-stone-300 pt-6 text-sm text-stone-500">
-              <span>תכנון מותאם אישית</span>
-              <span>חומרי גלם איכותיים</span>
-              <span>פרזול וגימור מדויק</span>
-              <span>ייצור והתקנה</span>
+          <div className="relative z-10 flex min-h-[560px] items-end px-7 py-12 text-white sm:px-10 sm:py-14 md:px-14 md:py-16 lg:px-20">
+            <div className="grid w-full gap-10 lg:grid-cols-[.55fr_1.45fr] lg:items-end">
+              <div>
+                <p className="text-xs font-medium tracking-[0.25em] text-white/60">
+                  02 / הגישה שלנו
+                </p>
+
+                <div className="mt-5 h-px w-14 bg-[#c79a6a]" />
+              </div>
+
+              <div>
+                <h2 className="max-w-5xl text-4xl font-light leading-[1.2] tracking-[-0.03em] text-white md:text-6xl">
+                  אנחנו לא מתחילים ממוצר.
+                  <br />
+                  אנחנו מתחילים מהחלל,
+                  <span className="text-white/62"> מהשימוש ומהאדם שחי בו.</span>
+                </h2>
+
+                <div className="mt-10 flex flex-wrap gap-x-12 gap-y-5 border-t border-white/25 pt-6 text-sm text-white/72">
+                  <span>תכנון מותאם אישית</span>
+                  <span>חומרי גלם איכותיים</span>
+                  <span>פרזול וגימור מדויק</span>
+                  <span>ייצור והתקנה</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
