@@ -295,9 +295,9 @@ export default async function HomePage() {
                             alt={background.alt}
                             fill
                             sizes="(max-width: 1024px) 100vw, 70vw"
-                            className="object-cover opacity-40 transition duration-1000 ease-out group-hover:scale-[1.055] group-hover:opacity-52"
+                            className="object-cover opacity-42 transition duration-700 ease-out group-hover:scale-[1.045] group-hover:opacity-85"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-black/72 to-black/48 transition duration-700 group-hover:from-black/84 group-hover:via-black/64 group-hover:to-black/40" />
+                          <div className="absolute inset-0 bg-gradient-to-l from-black/88 via-black/68 to-black/42 transition duration-500 group-hover:from-black/58 group-hover:via-black/32 group-hover:to-black/10" />
                           <div className="absolute inset-0 bg-black/10 transition duration-500 group-hover:bg-transparent" />
                         </>
                       )}
