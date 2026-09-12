@@ -1784,7 +1784,7 @@ function MaterialSelector({
       )}
 
       <ControlBlock title="סוג ידית">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {handles.map((handle) => (
             <HandleButton
               key={handle.id}
@@ -2849,35 +2849,68 @@ function HandleButton({
   finish: HandleFinish;
   onClick: () => void;
 }) {
+  const finishLabel =
+    finish === "black"
+      ? "שחור מט"
+      : finish === "gold"
+        ? "זהב"
+        : "ניקל";
+
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-2xl border p-2 text-center transition ${
+      className={`group relative overflow-hidden rounded-2xl border bg-white p-3 text-center transition-all duration-200 ${
         active
-          ? "border-stone-900 ring-1 ring-stone-900"
-          : "border-stone-200 hover:border-stone-400"
+          ? "border-stone-900 shadow-md ring-2 ring-stone-900/10"
+          : "border-stone-200 hover:-translate-y-0.5 hover:border-stone-400 hover:shadow-sm"
       }`}
     >
-      <div className="flex h-20 items-center justify-center overflow-hidden rounded-xl bg-stone-100 p-3">
+      {active && (
+        <span className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-stone-900 text-xs text-white">
+          ✓
+        </span>
+      )}
+
+      <div
+        className={`flex h-24 items-center justify-center overflow-hidden rounded-xl border transition ${
+          active
+            ? "border-stone-300 bg-stone-100"
+            : "border-stone-100 bg-stone-50 group-hover:bg-stone-100"
+        }`}
+      >
         {item.kind === "none" ? (
-          <span className="text-xs font-medium text-stone-400">
-            ללא
-          </span>
+          <div className="flex flex-col items-center gap-2 text-stone-400">
+            <span className="text-2xl">—</span>
+            <span className="text-xs">ללא ידית</span>
+          </div>
         ) : (
-          <div className="w-full max-w-[120px]">
+          <div className="w-full max-w-[145px] px-2">
             <HandleGraphic
               kind={item.kind}
               finish={finish}
+              decorativeShadow
             />
           </div>
         )}
       </div>
 
-      <span className="mt-2 block truncate text-[11px] font-medium text-stone-600">
-        {item.name}
-      </span>
+      <div className="mt-3">
+        <p
+          className={`text-sm font-semibold ${
+            active ? "text-stone-950" : "text-stone-700"
+          }`}
+        >
+          {item.name}
+        </p>
+
+        {item.kind !== "none" && (
+          <p className="mt-1 text-[11px] text-stone-400">
+            {finishLabel}
+          </p>
+        )}
+      </div>
     </button>
   );
 }
