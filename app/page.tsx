@@ -157,13 +157,13 @@ export default async function HomePage() {
         <div className="relative mx-auto min-h-[84vh] max-w-[1600px] overflow-hidden rounded-[1.7rem] bg-stone-900 sm:rounded-[2.2rem]">
           {heroImage ? (
             <Image
-              src={heroImage}
-              alt={heroImages[0]?.alt_text || heroProject?.title || SITE_NAME}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
+  src="/hero/hero-kitchen.png"
+  alt="נגריית עימאד אקרם"
+  fill
+  priority
+  sizes="100vw"
+  className="object-cover"
+/>
           ) : (
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#6b6459_0%,#302d28_42%,#11100e_100%)]" />
           )}
