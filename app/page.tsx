@@ -96,23 +96,23 @@ export default async function HomePage() {
 
   const categoryFallbackImages: Record<string, { url: string; alt: string }> = {
     kitchens: {
-      url: "/categories/details/kitchens/01.jpg",
+      url: "/categories/home/kitchens.jpg",
       alt: "מטבח נגרות בהתאמה אישית",
     },
     doors: {
-      url: "/categories/details/doors/01.jpg",
+      url: "/categories/home/doors.jpg",
       alt: "דלת עץ בעיצוב נגרות בהתאמה אישית",
     },
     "bedrooms-kids": {
-      url: "/categories/details/bedrooms-kids/01.jpg",
+      url: "/categories/home/bedrooms-kids.jpg",
       alt: "חדר שינה וחדר ילדים בנגרות בהתאמה אישית",
     },
     "wall-cladding": {
-      url: "/categories/details/wall-cladding/01.jpg",
+      url: "/categories/home/wall-cladding.jpg",
       alt: "חיפוי קיר בעבודת נגרות בהתאמה אישית",
     },
     custom: {
-      url: "/categories/details/custom/01.jpg",
+      url: "/categories/home/custom.jpg",
       alt: "עבודת נגרות מיוחדת בהתאמה אישית",
     },
   };
@@ -272,15 +272,18 @@ export default async function HomePage() {
 
               <div className="divide-y divide-white/10 border-y border-white/15">
                 {categories.map((category, index) => {
-                  const categoryImageOrder = [
-                    categoryFallbackImages.kitchens,
-                    categoryFallbackImages.doors,
-                    categoryFallbackImages["bedrooms-kids"],
-                    categoryFallbackImages["wall-cladding"],
-                    categoryFallbackImages.custom,
-                  ];
+                  const backgroundByName: Record<
+                    string,
+                    { url: string; alt: string }
+                  > = {
+                    מטבחים: categoryFallbackImages.kitchens,
+                    דלתות: categoryFallbackImages.doors,
+                    "חדרי שינה/ילדים": categoryFallbackImages["bedrooms-kids"],
+                    "חיפוי קירות": categoryFallbackImages["wall-cladding"],
+                    "עבודות מיוחדות": categoryFallbackImages.custom,
+                  };
 
-                  const background = categoryImageOrder[index];
+                  const background = backgroundByName[category.name];
 
                   return (
                     <Link

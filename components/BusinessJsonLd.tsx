@@ -1,13 +1,12 @@
+import Script from "next/script";
+
 import {
   SITE_NAME,
   SITE_PHONE_DISPLAY,
   SITE_SERVICE_AREA,
   SITE_TAGLINE,
 } from "@/lib/site";
-import {
-  SITE_DESCRIPTION,
-  SITE_URL,
-} from "@/lib/seo";
+import { SITE_DESCRIPTION, SITE_URL } from "@/lib/seo";
 
 export default function BusinessJsonLd() {
   const businessSchema = {
@@ -68,23 +67,26 @@ export default function BusinessJsonLd() {
     },
   };
 
+  const businessJson = JSON.stringify(businessSchema).replace(/</g, "\\u003c");
+  const websiteJson = JSON.stringify(websiteSchema).replace(/</g, "\\u003c");
+
   return (
     <>
-      <script
+      <Script
+        id="business-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(businessSchema).replace(/</g, "\\u003c"),
-        }}
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: businessJson }}
       />
-      <script
+
+      <Script
+        id="website-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(websiteSchema).replace(/</g, "\\u003c"),
-        }}
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: websiteJson }}
       />
-      <span className="sr-only">
-        {SITE_SERVICE_AREA}
-      </span>
+
+      <span className="sr-only">{SITE_SERVICE_AREA}</span>
     </>
   );
 }
