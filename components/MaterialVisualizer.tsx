@@ -1098,7 +1098,7 @@ export default function MaterialVisualizer() {
 
         <div className="grid min-w-0 gap-3 sm:gap-5 lg:grid-cols-[minmax(0,1.35fr)_420px] lg:items-start">
           {/* PREVIEW */}
-          <div className={`sticky z-40 min-w-0 self-start ${previewMode === "cabinet" ? "top-0 md:top-20 lg:top-24" : "top-[72px] sm:top-20 lg:top-24"}`}>
+          <div className="sticky top-0 z-40 min-w-0 self-start md:top-20 lg:top-24">
             <div className="overflow-hidden rounded-[1.35rem] border border-stone-200 bg-white shadow-md sm:rounded-[1.8rem] sm:shadow-sm">
               <div className="flex items-center justify-between gap-2 border-b border-stone-100 px-3 py-2.5 sm:px-5 sm:py-4">
                 <div>
