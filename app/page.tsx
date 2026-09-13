@@ -131,25 +131,47 @@ export default async function HomePage() {
 
 
   const customerGallery = featuredProjects
-    .flatMap((project) => {
+    .map((project) => {
       const category = normalizeRelation(project.categories);
-      const images = [...(project.project_images ?? [])].sort(
-        (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)
-      );
 
-      return images
+      const firstImage = [...(project.project_images ?? [])]
         .filter((image) => Boolean(image.storage_path))
-        .map((image) => ({
-          id: `${project.id}-${image.id}`,
-          projectTitle: project.title,
-          projectSlug: project.slug,
-          city: project.city,
-          categoryName: category?.name ?? null,
-          imageUrl: getProjectImageUrl(image.storage_path),
-          alt: image.alt_text || project.title,
-        }));
+        .sort(
+          (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)
+        )[0];
+
+      if (!firstImage) {
+        return null;
+      }
+
+      return {
+        id: `${project.id}-${firstImage.id}`,
+        projectTitle: project.title,
+        projectSlug: project.slug,
+        city: project.city,
+        categoryName: category?.name ?? null,
+        imageUrl: getProjectImageUrl(firstImage.storage_path),
+        alt: firstImage.alt_text || project.title,
+      };
     })
+    .filter(
+      (
+        item
+      ): item is NonNullable<typeof item> =>
+        Boolean(item)
+    )
     .slice(0, 10);
+
+  const customerGalleryGroups = Array.from(
+    {
+      length: Math.ceil(customerGallery.length / 3),
+    },
+    (_, groupIndex) =>
+      customerGallery.slice(
+        groupIndex * 3,
+        groupIndex * 3 + 3
+      )
+  );
 
   return (
     <main dir="rtl" className="overflow-hidden bg-[#f4f1eb] text-[#1f1f1c]">
@@ -388,7 +410,7 @@ export default async function HomePage() {
               </p>
 
               <h2 className="mt-4 text-4xl font-light tracking-tight md:text-6xl">
-                גלריית לקוחות.
+                בתים אמיתיים.
                 <br />
                 <span className="text-stone-400">נגרות שחיה בתוך הבית.</span>
               </h2>
@@ -416,68 +438,53 @@ export default async function HomePage() {
             בקרוב יופיעו כאן תמונות מבתים של לקוחות.
           </div>
         ) : (
-          <div className="grid auto-rows-[105px] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[135px] sm:gap-4 md:grid-cols-12 md:auto-rows-[72px]">
-            {customerGallery.map((item, index) => {
-              const layouts = [
-                "col-span-2 row-span-3 md:col-span-7 md:row-span-6",
-                "col-span-1 row-span-2 md:col-span-5 md:row-span-4",
-                "col-span-1 row-span-2 md:col-span-5 md:row-span-5",
-                "col-span-2 row-span-3 md:col-span-4 md:row-span-5",
-                "col-span-1 row-span-2 md:col-span-4 md:row-span-4",
-                "col-span-1 row-span-2 md:col-span-4 md:row-span-4",
-                "col-span-2 row-span-3 md:col-span-8 md:row-span-6",
-                "col-span-1 row-span-2 md:col-span-4 md:row-span-3",
-                "col-span-1 row-span-2 md:col-span-4 md:row-span-3",
-                "col-span-2 row-span-3 md:col-span-8 md:row-span-5",
-              ];
+          <div className="space-y-4 sm:space-y-5 lg:space-y-7">
+            {customerGalleryGroups.map((group, groupIndex) => {
+              const mainItem = group[0];
+              const secondItem = group[1];
+              const thirdItem = group[2];
+              const reversed = groupIndex % 2 === 1;
+
+              if (!mainItem) {
+                return null;
+              }
 
               return (
-                <Link
-                  key={item.id}
-                  href={`/projects/${item.projectSlug}`}
-                  className={`group relative overflow-hidden rounded-[1.35rem] bg-stone-200 shadow-[0_18px_55px_rgba(53,45,36,0.08)] sm:rounded-[1.7rem] ${layouts[index % layouts.length]}`}
+                <div
+                  key={mainItem.id}
+                  className="grid gap-4 sm:gap-5 lg:min-h-[620px] lg:grid-cols-[1.35fr_.65fr] lg:gap-6"
                 >
-                  <Image
-                    src={item.imageUrl}
-                    alt={item.alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 60vw"
-                    className="object-cover transition duration-1000 ease-out group-hover:scale-[1.045]"
+                  <CustomerGalleryCard
+                    item={mainItem}
+                    number={groupIndex * 3 + 1}
+                    variant="large"
+                    className={reversed ? "lg:order-2" : ""}
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/5 to-transparent opacity-75 transition duration-500 group-hover:opacity-90" />
+                  {(secondItem || thirdItem) && (
+                    <div
+                      className={`grid gap-4 sm:gap-5 lg:h-full lg:gap-6 ${
+                        thirdItem ? "lg:grid-rows-2" : ""
+                      } ${reversed ? "lg:order-1" : ""}`}
+                    >
+                      {secondItem && (
+                        <CustomerGalleryCard
+                          item={secondItem}
+                          number={groupIndex * 3 + 2}
+                          variant="small"
+                        />
+                      )}
 
-                  <div className="absolute right-4 top-4 flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-3 py-1.5 text-[11px] text-white/85 backdrop-blur-md sm:right-5 sm:top-5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#d7b58c]" />
-                    מהבית של הלקוח
-                  </div>
-
-                  <div className="absolute inset-x-0 bottom-0 p-4 text-white sm:p-5 md:p-6">
-                    {item.categoryName && (
-                      <p className="mb-1 text-[11px] font-medium tracking-[0.16em] text-white/60">
-                        {item.categoryName}
-                      </p>
-                    )}
-
-                    <div className="flex items-end justify-between gap-4">
-                      <div>
-                        <h3 className="text-lg font-medium leading-tight sm:text-xl">
-                          {item.projectTitle}
-                        </h3>
-
-                        {item.city && (
-                          <p className="mt-1 text-xs text-white/65">
-                            {item.city}
-                          </p>
-                        )}
-                      </div>
-
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/10 text-sm backdrop-blur-sm transition duration-300 group-hover:-translate-x-1 group-hover:bg-white group-hover:text-stone-900">
-                        ←
-                      </span>
+                      {thirdItem && (
+                        <CustomerGalleryCard
+                          item={thirdItem}
+                          number={groupIndex * 3 + 3}
+                          variant="small"
+                        />
+                      )}
                     </div>
-                  </div>
-                </Link>
+                  )}
+                </div>
               );
             })}
           </div>
@@ -607,6 +614,97 @@ export default async function HomePage() {
         </div>
       </section>
     </main>
+  );
+}
+
+type CustomerGalleryItem = {
+  id: string;
+  projectTitle: string;
+  projectSlug: string;
+  city: string | null;
+  categoryName: string | null;
+  imageUrl: string;
+  alt: string;
+};
+
+function CustomerGalleryCard({
+  item,
+  number,
+  variant,
+  className = "",
+}: {
+  item: CustomerGalleryItem;
+  number: number;
+  variant: "large" | "small";
+  className?: string;
+}) {
+  const isLarge = variant === "large";
+
+  return (
+    <Link
+      href={`/projects/${item.projectSlug}`}
+      className={`group relative block min-h-0 overflow-hidden rounded-[1.5rem] bg-stone-200 shadow-[0_18px_55px_rgba(53,45,36,0.08)] sm:rounded-[1.9rem] ${
+        isLarge
+          ? "aspect-[4/3] sm:aspect-[16/10] lg:h-full lg:aspect-auto"
+          : "aspect-[4/3] sm:aspect-[16/10] lg:h-full lg:aspect-auto"
+      } ${className}`}
+    >
+      <Image
+        src={item.imageUrl}
+        alt={item.alt}
+        fill
+        sizes={
+          isLarge
+            ? "(max-width: 1024px) 100vw, 68vw"
+            : "(max-width: 1024px) 100vw, 32vw"
+        }
+        className="object-cover transition duration-1000 ease-out group-hover:scale-[1.04]"
+      />
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/78 via-black/10 to-black/5 transition duration-500 group-hover:from-black/84" />
+
+      <div className="absolute left-4 top-4 flex h-10 min-w-10 items-center justify-center rounded-full border border-white/25 bg-black/25 px-3 text-[11px] font-medium tracking-[0.12em] text-white/80 backdrop-blur-md sm:left-5 sm:top-5">
+        {String(number).padStart(2, "0")}
+      </div>
+
+      <div
+        className={`absolute inset-x-0 bottom-0 text-white ${
+          isLarge
+            ? "p-5 sm:p-7 md:p-9"
+            : "p-5 sm:p-6"
+        }`}
+      >
+        {item.categoryName && (
+          <p className="text-[11px] font-medium tracking-[0.17em] text-white/55">
+            {item.categoryName}
+          </p>
+        )}
+
+        <div className="mt-2 flex items-end justify-between gap-5">
+          <div className="min-w-0">
+            <h3
+              className={`font-medium leading-tight tracking-tight ${
+                isLarge
+                  ? "text-2xl sm:text-3xl md:text-4xl"
+                  : "text-xl sm:text-2xl"
+              }`}
+            >
+              {item.projectTitle}
+            </h3>
+
+            {item.city && (
+              <p className="mt-2 text-xs text-white/62 sm:text-sm">
+                {item.city}
+              </p>
+            )}
+          </div>
+
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/10 text-base backdrop-blur-sm transition duration-300 group-hover:-translate-x-1 group-hover:bg-white group-hover:text-stone-900 sm:h-11 sm:w-11">
+            ←
+          </span>
+        </div>
+      </div>
+    </Link>
   );
 }
 

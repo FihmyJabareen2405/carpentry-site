@@ -1197,7 +1197,7 @@ export default function MaterialVisualizer() {
           </div>
 
           {/* CONTROLS */}
-          <aside className="min-w-0 space-y-3 sm:space-y-4 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pl-1">
+          <aside className="min-w-0 space-y-3 sm:space-y-4 lg:pl-1">
             <div className="rounded-[1.3rem] border border-stone-200 bg-white p-3 shadow-sm sm:rounded-[1.6rem] sm:p-4">
               <p className="text-[11px] font-medium tracking-[0.18em] text-stone-400">
                 עריכת חזית
