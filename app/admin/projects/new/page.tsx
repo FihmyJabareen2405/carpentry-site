@@ -403,7 +403,7 @@ export default async function NewProjectPage() {
 /* ========================================= */
 
 const inputClass =
-  "h-12 w-full rounded-xl border border-stone-200 bg-[#faf9f6] px-4 text-sm outline-none transition placeholder:text-stone-400 focus:border-amber-700 focus:bg-white";
+  "h-12 w-full rounded-xl border border-stone-200 bg-[#faf9f6] px-4 text-sm text-stone-900 caret-stone-900 outline-none transition placeholder:text-stone-400 focus:border-amber-700 focus:bg-white";
 
 /* ========================================= */
 /* FORM SECTION */

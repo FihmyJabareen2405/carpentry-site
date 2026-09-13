@@ -19,7 +19,7 @@ export default function AdminLayout({
   return (
     <div
       dir="rtl"
-      className="min-h-screen bg-[#f5f4f1]"
+      className="min-h-screen bg-[#f5f4f1] text-stone-900"
     >
       <AdminSidebar />
 
