@@ -16,6 +16,7 @@ export default function SiteShell({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [showVisualizerMobileHeader, setShowVisualizerMobileHeader] = useState(true);
 
   const [isTransitioning, setIsTransitioning] = useState(false);
   const transitionTimerRef = useRef<number | null>(null);
@@ -108,6 +109,40 @@ export default function SiteShell({
     };
   }, [isPrivateArea, isTransitioning, router]);
 
+  const isVisualizer = pathname.startsWith("/visualizer");
+
+  useEffect(() => {
+    if (!isVisualizer) {
+      setShowVisualizerMobileHeader(true);
+      return;
+    }
+
+    const updateHeaderVisibility = () => {
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+      if (!isMobile) {
+        setShowVisualizerMobileHeader(true);
+        return;
+      }
+
+      // On the Visualizer mobile page the site header is visible only
+      // when the user is back at the very top of the page.
+      setShowVisualizerMobileHeader(window.scrollY <= 4);
+    };
+
+    updateHeaderVisibility();
+
+    window.addEventListener("scroll", updateHeaderVisibility, {
+      passive: true,
+    });
+    window.addEventListener("resize", updateHeaderVisibility);
+
+    return () => {
+      window.removeEventListener("scroll", updateHeaderVisibility);
+      window.removeEventListener("resize", updateHeaderVisibility);
+    };
+  }, [isVisualizer]);
+
   if (isPrivateArea) {
     return <>{children}</>;
   }
@@ -117,7 +152,7 @@ export default function SiteShell({
       <IntroVideo />
       <PageTransition active={isTransitioning} />
 
-      <SiteHeader />
+      {(!isVisualizer || showVisualizerMobileHeader) && <SiteHeader />}
 
       {children}
 
