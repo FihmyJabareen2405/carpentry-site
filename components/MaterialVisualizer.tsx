@@ -1060,7 +1060,7 @@ export default function MaterialVisualizer() {
   return (
     <section
       dir="rtl"
-      className="overflow-x-hidden bg-[#f5f4f0] px-2 py-3 sm:px-5 sm:py-5 lg:px-7 lg:py-7"
+      className="overflow-x-clip bg-[#f5f4f0] px-2 py-3 sm:px-5 sm:py-5 lg:px-7 lg:py-7"
     >
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-3 flex flex-col gap-3 rounded-[1.35rem] border border-stone-200 bg-white px-4 py-4 shadow-sm sm:mb-5 sm:rounded-[1.7rem] sm:px-7 sm:py-5 md:flex-row md:items-center md:justify-between">
@@ -1098,7 +1098,7 @@ export default function MaterialVisualizer() {
 
         <div className="grid min-w-0 gap-3 sm:gap-5 lg:grid-cols-[minmax(0,1.35fr)_420px] lg:items-start">
           {/* PREVIEW */}
-          <div className="sticky top-[68px] z-30 min-w-0 self-start sm:top-20 lg:top-24">
+          <div className="sticky top-[72px] z-40 min-w-0 self-start sm:top-20 lg:top-24">
             <div className="overflow-hidden rounded-[1.35rem] border border-stone-200 bg-white shadow-md sm:rounded-[1.8rem] sm:shadow-sm">
               <div className="flex items-center justify-between gap-2 border-b border-stone-100 px-3 py-2.5 sm:px-5 sm:py-4">
                 <div>
@@ -2445,7 +2445,7 @@ function MaterialSurface({
         className="absolute bg-center bg-cover bg-no-repeat transition-transform duration-300"
         style={{
           inset:
-            config.grain === "vertical"
+            config.grain === "horizontal"
               ? "-25%"
               : "0",
 
@@ -2453,7 +2453,7 @@ function MaterialSurface({
             `url("${wood.image}")`,
 
           transform:
-            config.grain === "vertical"
+            config.grain === "horizontal"
               ? "rotate(90deg) scale(1.25)"
               : "rotate(0deg) scale(1)",
 
@@ -3026,7 +3026,7 @@ function WoodButton({
           className="absolute bg-cover bg-center transition-transform duration-300"
           style={{
             inset:
-              grain === "vertical"
+              grain === "horizontal"
                 ? "-30%"
                 : "0",
 
@@ -3034,7 +3034,7 @@ function WoodButton({
               `url("${wood.image}")`,
 
             transform:
-              grain === "vertical"
+              grain === "horizontal"
                 ? "rotate(90deg) scale(1.3)"
                 : "rotate(0deg) scale(1)",
 
