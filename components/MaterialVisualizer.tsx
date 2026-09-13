@@ -85,7 +85,12 @@ type HandleKind =
   | "tbar"
   | "arch"
   | "knob"
-  | "recessed";
+  | "recessed"
+  | "edge"
+  | "profile"
+  | "cup"
+  | "slim"
+  | "integrated";
 
 type HandleFinish =
   | "black"
@@ -322,6 +327,31 @@ const handles: HandleOption[] = [
     name: "ידית שקועה",
     kind: "recessed",
   },
+  {
+    id: "edge",
+    name: "ידית קצה",
+    kind: "edge",
+  },
+  {
+    id: "profile",
+    name: "פרופיל G",
+    kind: "profile",
+  },
+  {
+    id: "cup",
+    name: "ידית כוס",
+    kind: "cup",
+  },
+  {
+    id: "slim",
+    name: "ידית דקה",
+    kind: "slim",
+  },
+  {
+    id: "integrated",
+    name: "ידית אינטגרלית",
+    kind: "integrated",
+  },
 ];
 
 /* ======================================== */
@@ -333,7 +363,7 @@ const defaultLeft: SideConfig = {
   woodId: "natural-oak",
   colorId: "sahara",
   grain: "vertical",
-  handleId: "bar",
+  handleId: "none",
   handleFinish: "black",
   handlePosition: "right",
   handleOrientation: "horizontal",
@@ -341,11 +371,11 @@ const defaultLeft: SideConfig = {
 };
 
 const defaultRight: SideConfig = {
-  type: "color",
-  woodId: "walnut",
+  type: "wood",
+  woodId: "smoked-oak",
   colorId: "graphite",
   grain: "vertical",
-  handleId: "bar",
+  handleId: "none",
   handleFinish: "nickel",
   handlePosition: "left",
   handleOrientation: "horizontal",
@@ -732,7 +762,7 @@ export default function MaterialVisualizer() {
   const [linkCopied, setLinkCopied] = useState(false);
   const [wallColor, setWallColor] = useState<WallColor>("greige");
   const [floorType, setFloorType] = useState<FloorType>("light-wood");
-  const [previewMode, setPreviewMode] = useState<PreviewMode>("cabinet");
+  const [previewMode, setPreviewMode] = useState<PreviewMode>("boards");
   const [cabinetType, setCabinetType] = useState<CabinetType>("tall");
   const [frontStyle, setFrontStyle] = useState<FrontStyle>("smooth");
   const [countertopType, setCountertopType] = useState<CountertopType>("white-marble");
@@ -974,7 +1004,7 @@ export default function MaterialVisualizer() {
       ...defaultRight,
     });
 
-    setPreviewMode("cabinet");
+    setPreviewMode("boards");
     setCabinetType("tall");
     setFrontStyle("smooth");
     setCountertopType("white-marble");
@@ -1120,7 +1150,7 @@ export default function MaterialVisualizer() {
                       floorType={floorType}
                     />
                   ) : (
-                    <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                    <div className="grid grid-cols-2 gap-0">
                       <MaterialBoard config={right} side="right" />
                       <MaterialBoard config={left} side="left" />
                     </div>
@@ -1636,8 +1666,17 @@ function MaterialSelector({
         </ControlBlock>
       )}
 
-      <ControlBlock title="סוג ידית">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+      <ControlBlock title="פרזול וידיות">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <p className="text-xs text-stone-500">
+            החליקו לצדדים ובחרו ידית. השינוי מופיע מיד בתצוגה.
+          </p>
+          <span className="shrink-0 rounded-full bg-stone-100 px-2.5 py-1 text-[10px] font-medium text-stone-500">
+            {handles.length} אפשרויות
+          </span>
+        </div>
+
+        <div className="grid auto-cols-[132px] grid-flow-col gap-3 overflow-x-auto pb-3 [scrollbar-width:thin]">
           {handles.map((handle) => (
             <HandleButton
               key={handle.id}
@@ -1653,13 +1692,17 @@ function MaterialSelector({
             />
           ))}
         </div>
-      </ControlBlock>
 
-      {value.handleId !== "none" && (
-        <>
-          <ControlBlock title="גימור הידית">
-            <div className="grid grid-cols-3 gap-3">
-              <ChoiceButton
+        {value.handleId !== "none" && (
+          <div className="mt-4 border-t border-stone-100 pt-4">
+            <p className="mb-3 text-xs font-medium text-stone-500">
+              גימור הפרזול
+            </p>
+
+            <div className="grid grid-cols-3 gap-2">
+              <FinishButton
+                label="שחור מט"
+                finish="black"
                 active={value.handleFinish === "black"}
                 onClick={() =>
                   onChange({
@@ -1667,11 +1710,11 @@ function MaterialSelector({
                     handleFinish: "black",
                   })
                 }
-              >
-                שחור מט
-              </ChoiceButton>
+              />
 
-              <ChoiceButton
+              <FinishButton
+                label="ניקל"
+                finish="nickel"
                 active={value.handleFinish === "nickel"}
                 onClick={() =>
                   onChange({
@@ -1679,11 +1722,11 @@ function MaterialSelector({
                     handleFinish: "nickel",
                   })
                 }
-              >
-                ניקל
-              </ChoiceButton>
+              />
 
-              <ChoiceButton
+              <FinishButton
+                label="זהב"
+                finish="gold"
                 active={value.handleFinish === "gold"}
                 onClick={() =>
                   onChange({
@@ -1691,121 +1734,131 @@ function MaterialSelector({
                     handleFinish: "gold",
                   })
                 }
-              >
-                זהב
-              </ChoiceButton>
+              />
             </div>
-          </ControlBlock>
 
-          <ControlBlock title="כיוון הידית">
-            <div className="grid grid-cols-2 gap-3">
-              <ChoiceButton
-                active={value.handleOrientation === "horizontal"}
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    handleOrientation: "horizontal",
-                  })
-                }
-              >
-                ↔ אופקי
-              </ChoiceButton>
+            <details className="group mt-4 overflow-hidden rounded-2xl border border-stone-200 bg-stone-50">
+              <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-medium text-stone-700">
+                <span>התאמות מתקדמות לידית</span>
+                <span className="text-stone-400 transition group-open:rotate-180">⌄</span>
+              </summary>
 
-              <ChoiceButton
-                active={value.handleOrientation === "vertical"}
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    handleOrientation: "vertical",
-                  })
-                }
-              >
-                ↕ אנכי
-              </ChoiceButton>
-            </div>
-          </ControlBlock>
+              <div className="space-y-4 border-t border-stone-200 bg-white p-4">
+                <div>
+                  <p className="mb-2 text-xs font-medium text-stone-500">כיוון</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <ChoiceButton
+                      active={value.handleOrientation === "horizontal"}
+                      onClick={() =>
+                        onChange({
+                          ...value,
+                          handleOrientation: "horizontal",
+                        })
+                      }
+                    >
+                      ↔ אופקי
+                    </ChoiceButton>
 
-          <ControlBlock title="גודל הידית">
-            <div className="grid grid-cols-3 gap-3">
-              <ChoiceButton
-                active={value.handleSize === "small"}
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    handleSize: "small",
-                  })
-                }
-              >
-                קטן
-              </ChoiceButton>
+                    <ChoiceButton
+                      active={value.handleOrientation === "vertical"}
+                      onClick={() =>
+                        onChange({
+                          ...value,
+                          handleOrientation: "vertical",
+                        })
+                      }
+                    >
+                      ↕ אנכי
+                    </ChoiceButton>
+                  </div>
+                </div>
 
-              <ChoiceButton
-                active={value.handleSize === "medium"}
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    handleSize: "medium",
-                  })
-                }
-              >
-                בינוני
-              </ChoiceButton>
+                <div>
+                  <p className="mb-2 text-xs font-medium text-stone-500">גודל</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <ChoiceButton
+                      active={value.handleSize === "small"}
+                      onClick={() =>
+                        onChange({
+                          ...value,
+                          handleSize: "small",
+                        })
+                      }
+                    >
+                      קטן
+                    </ChoiceButton>
 
-              <ChoiceButton
-                active={value.handleSize === "large"}
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    handleSize: "large",
-                  })
-                }
-              >
-                גדול
-              </ChoiceButton>
-            </div>
-          </ControlBlock>
+                    <ChoiceButton
+                      active={value.handleSize === "medium"}
+                      onClick={() =>
+                        onChange({
+                          ...value,
+                          handleSize: "medium",
+                        })
+                      }
+                    >
+                      בינוני
+                    </ChoiceButton>
 
-          <ControlBlock title="מיקום הידית" last>
-            <div className="grid grid-cols-3 gap-3">
-              <ChoiceButton
-                active={value.handlePosition === "right"}
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    handlePosition: "right",
-                  })
-                }
-              >
-                ימין
-              </ChoiceButton>
+                    <ChoiceButton
+                      active={value.handleSize === "large"}
+                      onClick={() =>
+                        onChange({
+                          ...value,
+                          handleSize: "large",
+                        })
+                      }
+                    >
+                      גדול
+                    </ChoiceButton>
+                  </div>
+                </div>
 
-              <ChoiceButton
-                active={value.handlePosition === "center"}
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    handlePosition: "center",
-                  })
-                }
-              >
-                מרכז
-              </ChoiceButton>
+                <div>
+                  <p className="mb-2 text-xs font-medium text-stone-500">מיקום</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <ChoiceButton
+                      active={value.handlePosition === "right"}
+                      onClick={() =>
+                        onChange({
+                          ...value,
+                          handlePosition: "right",
+                        })
+                      }
+                    >
+                      ימין
+                    </ChoiceButton>
 
-              <ChoiceButton
-                active={value.handlePosition === "left"}
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    handlePosition: "left",
-                  })
-                }
-              >
-                שמאל
-              </ChoiceButton>
-            </div>
-          </ControlBlock>
-        </>
-      )}
+                    <ChoiceButton
+                      active={value.handlePosition === "center"}
+                      onClick={() =>
+                        onChange({
+                          ...value,
+                          handlePosition: "center",
+                        })
+                      }
+                    >
+                      מרכז
+                    </ChoiceButton>
+
+                    <ChoiceButton
+                      active={value.handlePosition === "left"}
+                      onClick={() =>
+                        onChange({
+                          ...value,
+                          handlePosition: "left",
+                        })
+                      }
+                    >
+                      שמאל
+                    </ChoiceButton>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+        )}
+      </ControlBlock>
 
     </div>
   );
@@ -2460,9 +2513,16 @@ function HandleOverlay({
       ? "rotate(90deg)"
       : "none";
 
+  const topPosition =
+    handle.kind === "edge" ||
+    handle.kind === "profile" ||
+    handle.kind === "integrated"
+      ? "top-[18%]"
+      : "top-[43%]";
+
   return (
     <div
-      className={`pointer-events-none absolute top-[43%] z-20 -translate-y-1/2 ${horizontalPosition}`}
+      className={`pointer-events-none absolute ${topPosition} z-20 -translate-y-1/2 ${horizontalPosition}`}
     >
       <div
         className={`${sizeClass} max-w-none`}
@@ -2596,6 +2656,132 @@ function HandleGraphic({
     );
   }
 
+  if (kind === "edge") {
+    return (
+      <svg
+        viewBox="0 0 320 90"
+        aria-hidden="true"
+        className="block h-auto w-full overflow-visible"
+        style={{ filter: shadow }}
+      >
+        <defs>
+          <linearGradient id={`edge-${finish}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={metal.light} />
+            <stop offset="48%" stopColor={metal.main} />
+            <stop offset="100%" stopColor={metal.dark} />
+          </linearGradient>
+        </defs>
+        <rect x="42" y="31" width="236" height="13" rx="5" fill={`url(#edge-${finish})`} />
+        <path
+          d="M58 44 H262 V57 C262 62 258 66 253 66 H67 C62 66 58 62 58 57 Z"
+          fill={metal.dark}
+          opacity="0.92"
+        />
+        <path d="M70 47 H250" stroke="rgba(255,255,255,.20)" strokeWidth="2" />
+      </svg>
+    );
+  }
+
+  if (kind === "profile") {
+    return (
+      <svg
+        viewBox="0 0 320 90"
+        aria-hidden="true"
+        className="block h-auto w-full overflow-visible"
+        style={{ filter: shadow }}
+      >
+        <defs>
+          <linearGradient id={`profile-${finish}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={metal.light} />
+            <stop offset="50%" stopColor={metal.main} />
+            <stop offset="100%" stopColor={metal.dark} />
+          </linearGradient>
+        </defs>
+        <path
+          d="M46 28 H274 V42 H74 V53 H258 V66 H60 C52 66 46 60 46 52 Z"
+          fill={`url(#profile-${finish})`}
+        />
+        <path d="M75 45 H255" stroke="rgba(0,0,0,.35)" strokeWidth="3" />
+      </svg>
+    );
+  }
+
+  if (kind === "cup") {
+    return (
+      <svg
+        viewBox="0 0 260 100"
+        aria-hidden="true"
+        className="block h-auto w-full overflow-visible"
+        style={{ filter: shadow }}
+      >
+        <defs>
+          <linearGradient id={`cup-${finish}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={metal.light} />
+            <stop offset="48%" stopColor={metal.main} />
+            <stop offset="100%" stopColor={metal.dark} />
+          </linearGradient>
+        </defs>
+        <path
+          d="M50 36 H210 C203 69 181 78 130 78 C79 78 57 69 50 36 Z"
+          fill={`url(#cup-${finish})`}
+        />
+        <path
+          d="M64 43 H196 C187 59 169 65 130 65 C91 65 73 59 64 43 Z"
+          fill="rgba(0,0,0,.40)"
+        />
+        <circle cx="67" cy="35" r="5" fill={metal.dark} />
+        <circle cx="193" cy="35" r="5" fill={metal.dark} />
+      </svg>
+    );
+  }
+
+  if (kind === "slim") {
+    return (
+      <svg
+        viewBox="0 0 360 90"
+        aria-hidden="true"
+        className="block h-auto w-full overflow-visible"
+        style={{ filter: shadow }}
+      >
+        <defs>
+          <linearGradient id={`slim-${finish}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={metal.light} />
+            <stop offset="55%" stopColor={metal.main} />
+            <stop offset="100%" stopColor={metal.dark} />
+          </linearGradient>
+        </defs>
+        <rect x="48" y="31" width="264" height="9" rx="5" fill={`url(#slim-${finish})`} />
+        <rect x="78" y="39" width="8" height="20" rx="3" fill={metal.dark} />
+        <rect x="274" y="39" width="8" height="20" rx="3" fill={metal.dark} />
+      </svg>
+    );
+  }
+
+  if (kind === "integrated") {
+    return (
+      <svg
+        viewBox="0 0 320 90"
+        aria-hidden="true"
+        className="block h-auto w-full overflow-visible"
+        style={{ filter: shadow }}
+      >
+        <defs>
+          <linearGradient id={`integrated-${finish}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={metal.light} />
+            <stop offset="55%" stopColor={metal.main} />
+            <stop offset="100%" stopColor={metal.dark} />
+          </linearGradient>
+        </defs>
+        <rect x="42" y="34" width="236" height="25" rx="12" fill="rgba(0,0,0,.36)" />
+        <path
+          d="M55 35 H265 V46 C265 51 261 55 256 55 H64 C59 55 55 51 55 46 Z"
+          fill={`url(#integrated-${finish})`}
+        />
+        <path d="M72 48 H248" stroke="rgba(255,255,255,.17)" strokeWidth="2" />
+      </svg>
+    );
+  }
+
   if (kind === "arch") {
     return (
       <svg
@@ -2701,44 +2887,43 @@ function HandleButton({
   finish: HandleFinish;
   onClick: () => void;
 }) {
-  const finishLabel =
-    finish === "black"
-      ? "שחור מט"
-      : finish === "gold"
-        ? "זהב"
-        : "ניקל";
-
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`group relative overflow-hidden rounded-2xl border bg-white p-3 text-center transition-all duration-200 ${
+      className={`group relative w-[132px] overflow-hidden rounded-2xl border p-2 text-center transition-all duration-200 ${
         active
-          ? "border-stone-900 shadow-md ring-2 ring-stone-900/10"
-          : "border-stone-200 hover:-translate-y-0.5 hover:border-stone-400 hover:shadow-sm"
+          ? "border-stone-900 bg-stone-900 shadow-md ring-2 ring-stone-900/10"
+          : "border-stone-200 bg-white hover:-translate-y-0.5 hover:border-stone-400 hover:shadow-sm"
       }`}
     >
       {active && (
-        <span className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-stone-900 text-xs text-white">
+        <span className="absolute right-2 top-2 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-[#d7b58c] text-[10px] font-bold text-stone-950">
           ✓
         </span>
       )}
 
-      <div
-        className={`flex h-24 items-center justify-center overflow-hidden rounded-xl border transition ${
-          active
-            ? "border-stone-300 bg-stone-100"
-            : "border-stone-100 bg-stone-50 group-hover:bg-stone-100"
-        }`}
-      >
+      <div className="relative h-[92px] overflow-hidden rounded-xl border border-black/5 bg-[#d8c4a9] shadow-inner">
+        <div className="absolute inset-[8px] rounded-lg border border-black/10 bg-gradient-to-br from-[#e3d2ba] to-[#c9ad89] shadow-[inset_0_1px_0_rgba(255,255,255,.45)]" />
+        <div className="absolute inset-y-[8px] left-1/2 w-px bg-black/[0.06]" />
+
         {item.kind === "none" ? (
-          <div className="flex flex-col items-center gap-2 text-stone-400">
-            <span className="text-2xl">—</span>
-            <span className="text-xs">ללא ידית</span>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="rounded-full bg-white/70 px-3 py-1 text-[10px] font-medium text-stone-500">
+              ללא ידית
+            </span>
           </div>
         ) : (
-          <div className="w-full max-w-[145px] px-2">
+          <div
+            className={`absolute left-1/2 z-10 -translate-x-1/2 ${
+              item.kind === "edge" ||
+              item.kind === "profile" ||
+              item.kind === "integrated"
+                ? "top-[16px]"
+                : "top-1/2 -translate-y-1/2"
+            } w-[86px]`}
+          >
             <HandleGraphic
               kind={item.kind}
               finish={finish}
@@ -2748,21 +2933,51 @@ function HandleButton({
         )}
       </div>
 
-      <div className="mt-3">
-        <p
-          className={`text-sm font-semibold ${
-            active ? "text-stone-950" : "text-stone-700"
-          }`}
-        >
-          {item.name}
-        </p>
+      <p
+        className={`mt-2 truncate text-xs font-semibold ${
+          active ? "text-white" : "text-stone-700"
+        }`}
+      >
+        {item.name}
+      </p>
+    </button>
+  );
+}
 
-        {item.kind !== "none" && (
-          <p className="mt-1 text-[11px] text-stone-400">
-            {finishLabel}
-          </p>
-        )}
-      </div>
+function FinishButton({
+  label,
+  finish,
+  active,
+  onClick,
+}: {
+  label: string;
+  finish: HandleFinish;
+  active: boolean;
+  onClick: () => void;
+}) {
+  const swatch =
+    finish === "black"
+      ? "linear-gradient(145deg,#555,#111)"
+      : finish === "gold"
+        ? "linear-gradient(145deg,#f0d99a,#a97826)"
+        : "linear-gradient(145deg,#f4f4f4,#777)";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`flex min-h-11 items-center justify-center gap-2 rounded-xl border px-2 text-xs font-medium transition ${
+        active
+          ? "border-stone-900 bg-stone-900 text-white"
+          : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
+      }`}
+    >
+      <span
+        className="h-5 w-5 rounded-full border border-black/10 shadow-inner"
+        style={{ background: swatch }}
+      />
+      {label}
     </button>
   );
 }
