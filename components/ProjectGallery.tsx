@@ -60,13 +60,15 @@ export default function ProjectGallery({
     event: React.TouchEvent<HTMLElement>
   ) {
     touchEndX.current = null;
-    touchStartX.current = event.touches[0]?.clientX ?? null;
+    touchStartX.current =
+      event.touches[0]?.clientX ?? null;
   }
 
   function handleTouchMove(
     event: React.TouchEvent<HTMLElement>
   ) {
-    touchEndX.current = event.touches[0]?.clientX ?? null;
+    touchEndX.current =
+      event.touches[0]?.clientX ?? null;
   }
 
   function handleTouchEnd() {
@@ -78,15 +80,18 @@ export default function ProjectGallery({
     }
 
     const distance =
-      touchStartX.current - touchEndX.current;
+      touchStartX.current -
+      touchEndX.current;
+
     const minimumSwipeDistance = 45;
 
-    if (Math.abs(distance) < minimumSwipeDistance) {
+    if (
+      Math.abs(distance) <
+      minimumSwipeDistance
+    ) {
       return;
     }
 
-    // In an RTL gallery, a swipe to the left advances,
-    // while a swipe to the right shows the previous image.
     if (distance > 0) {
       showNext();
     } else {
@@ -97,10 +102,15 @@ export default function ProjectGallery({
   useEffect(() => {
     if (!isLightboxOpen) return;
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const previousOverflow =
+      document.body.style.overflow;
 
-    function handleKeyDown(event: KeyboardEvent) {
+    document.body.style.overflow =
+      "hidden";
+
+    function handleKeyDown(
+      event: KeyboardEvent
+    ) {
       if (event.key === "Escape") {
         closeLightbox();
       }
@@ -114,87 +124,109 @@ export default function ProjectGallery({
       }
     }
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener(
+      "keydown",
+      handleKeyDown
+    );
 
     return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow =
+        previousOverflow;
+
+      window.removeEventListener(
+        "keydown",
+        handleKeyDown
+      );
     };
-  }, [isLightboxOpen, images.length]);
+  }, [
+    isLightboxOpen,
+    images.length,
+  ]);
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[2rem] bg-stone-200">
+      <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[1.8rem] bg-stone-200 sm:rounded-[2.2rem]">
         <div className="text-center text-stone-500">
-          <div className="text-5xl">🪵</div>
+          <div className="text-4xl">
+            🪵
+          </div>
 
-          <p className="mt-3 text-sm">אין תמונות לפרויקט</p>
+          <p className="mt-3 text-sm">
+            אין תמונות לפרויקט
+          </p>
         </div>
       </div>
     );
   }
 
-  const selectedImage = images[selectedIndex];
+  const selectedImage =
+    images[selectedIndex];
 
   return (
     <>
-      <div className="space-y-4">
-        {/* Main image */}
+      <div className="space-y-3 sm:space-y-4">
         <div
-          className="group relative overflow-hidden rounded-[2rem] bg-stone-200"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          className="group relative overflow-hidden rounded-[1.8rem] bg-stone-200 shadow-[0_20px_70px_rgba(53,45,36,0.08)] sm:rounded-[2.2rem]"
+          onTouchStart={
+            handleTouchStart
+          }
+          onTouchMove={
+            handleTouchMove
+          }
+          onTouchEnd={
+            handleTouchEnd
+          }
         >
           <button
             type="button"
             onClick={openLightbox}
             aria-label="פתח תמונה במסך מלא"
-            className="relative block aspect-[4/3] w-full cursor-zoom-in"
+            className="relative block aspect-[4/3] w-full cursor-zoom-in sm:aspect-[16/10] lg:aspect-[16/9]"
           >
             <Image
               src={selectedImage.url}
-              alt={selectedImage.alt || title}
+              alt={
+                selectedImage.alt ||
+                title
+              }
               fill
               priority
-              sizes="(max-width: 1024px) 100vw, 66vw"
-              className="object-cover transition duration-500 group-hover:scale-[1.01]"
+              sizes="100vw"
+              className="object-cover transition duration-700 ease-out group-hover:scale-[1.015]"
             />
           </button>
 
-          {/* Full screen hint */}
-          <button
-            type="button"
-            onClick={openLightbox}
-            aria-label="פתח גלריה במסך מלא"
-            className="absolute right-5 top-5 flex h-11 items-center gap-2 rounded-full bg-black/45 px-4 text-xs font-medium text-white shadow-lg backdrop-blur-md transition hover:bg-black/60"
-          >
-            <span aria-hidden="true">⛶</span>
-            <span className="hidden sm:inline">מסך מלא</span>
-          </button>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/[0.04]" />
 
-          {/* Counter */}
+          <div className="absolute right-4 top-4 flex items-center gap-2 sm:right-5 sm:top-5">
+            <button
+              type="button"
+              onClick={openLightbox}
+              aria-label="פתח גלריה במסך מלא"
+              className="flex h-10 items-center gap-2 rounded-full border border-white/20 bg-black/30 px-3.5 text-xs font-medium text-white shadow-lg backdrop-blur-md transition hover:bg-black/50 sm:h-11 sm:px-4"
+            >
+              <span aria-hidden="true">
+                ⛶
+              </span>
+
+              <span className="hidden sm:inline">
+                מסך מלא
+              </span>
+            </button>
+          </div>
+
           {hasMultipleImages && (
-            <div className="absolute bottom-5 left-5 rounded-full bg-black/45 px-4 py-2 text-xs text-white backdrop-blur-md">
-              {selectedIndex + 1} / {images.length}
+            <div className="absolute bottom-4 right-4 rounded-full border border-white/20 bg-black/30 px-3 py-1.5 text-xs text-white backdrop-blur-md sm:bottom-5 sm:right-5 sm:px-4 sm:py-2">
+              {selectedIndex + 1}
+              <span className="mx-1.5 text-white/45">
+                /
+              </span>
+              {images.length}
             </div>
           )}
 
-          {/* Previous / Next */}
           {hasMultipleImages && (
-            <>
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  showPrevious();
-                }}
-                aria-label="תמונה קודמת"
-                className="absolute right-5 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-stone-900 opacity-100 shadow-lg backdrop-blur transition hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
-              >
-                →
-              </button>
-
+            <div className="absolute bottom-4 left-4 flex gap-2 sm:bottom-5 sm:left-5">
               <button
                 type="button"
                 onClick={(event) => {
@@ -202,77 +234,98 @@ export default function ProjectGallery({
                   showNext();
                 }}
                 aria-label="תמונה הבאה"
-                className="absolute left-5 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-stone-900 opacity-100 shadow-lg backdrop-blur transition hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg text-stone-950 shadow-lg transition hover:scale-105 sm:h-11 sm:w-11"
               >
                 ←
               </button>
-            </>
+
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  showPrevious();
+                }}
+                aria-label="תמונה קודמת"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/25 text-lg text-white backdrop-blur-md transition hover:bg-black/45 sm:h-11 sm:w-11"
+              >
+                →
+              </button>
+            </div>
           )}
         </div>
 
-        {/* Thumbnails */}
         {hasMultipleImages && (
-          <div className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6">
-            {images.map((image, index) => {
-              const selected = selectedIndex === index;
+          <div className="flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:thin] sm:gap-3">
+            {images.map(
+              (image, index) => {
+                const selected =
+                  selectedIndex === index;
 
-              return (
-                <button
-                  key={image.id}
-                  type="button"
-                  onClick={() => setSelectedIndex(index)}
-                  aria-label={`הצג תמונה ${index + 1}`}
-                  aria-current={selected ? "true" : undefined}
-                  className={`relative aspect-square overflow-hidden rounded-xl border-2 transition ${
-                    selected
-                      ? "border-amber-700"
-                      : "border-transparent opacity-70 hover:opacity-100"
-                  }`}
-                >
-                  <Image
-                    src={image.url}
-                    alt={
-                      image.alt ||
-                      `${title} - תמונה ${index + 1}`
+                return (
+                  <button
+                    key={image.id}
+                    type="button"
+                    onClick={() =>
+                      setSelectedIndex(
+                        index
+                      )
                     }
-                    fill
-                    sizes="(max-width: 640px) 25vw, 128px"
-                    className="object-cover"
-                  />
+                    aria-label={`הצג תמונה ${index + 1}`}
+                    aria-current={
+                      selected
+                        ? "true"
+                        : undefined
+                    }
+                    className={`relative aspect-[4/3] w-[116px] shrink-0 overflow-hidden rounded-[1rem] border-2 transition sm:w-[145px] sm:rounded-[1.15rem] ${
+                      selected
+                        ? "border-stone-950 opacity-100"
+                        : "border-transparent opacity-55 hover:opacity-100"
+                    }`}
+                  >
+                    <Image
+                      src={image.url}
+                      alt={
+                        image.alt ||
+                        `${title} תמונה ${index + 1}`
+                      }
+                      fill
+                      sizes="160px"
+                      className="object-cover"
+                    />
 
-                  {selected && (
-                    <div className="absolute inset-0 bg-black/5" />
-                  )}
-                </button>
-              );
-            })}
+                    {selected && (
+                      <div className="absolute inset-0 ring-1 ring-inset ring-white/35" />
+                    )}
+                  </button>
+                );
+              }
+            )}
           </div>
         )}
       </div>
-
-      {/* ========================================= */}
-      {/* LIGHTBOX */}
-      {/* ========================================= */}
 
       {isLightboxOpen && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label={`גלריית ${title}`}
-          className="fixed inset-0 z-[100] bg-black/95 text-white"
-          onClick={closeLightbox}
+          className="fixed inset-0 z-[100] bg-black/96 text-white"
+          onClick={
+            closeLightbox
+          }
         >
           <div className="flex h-full min-h-0 flex-col">
-            {/* Top bar */}
-            <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-6">
+            <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3.5 sm:px-6">
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-white/90">
                   {title}
                 </p>
 
                 {hasMultipleImages && (
-                  <p className="mt-1 text-xs text-white/55">
-                    {selectedIndex + 1} / {images.length}
+                  <p className="mt-0.5 text-xs text-white/45">
+                    {selectedIndex + 1}
+                    {" / "}
+                    {images.length}
                   </p>
                 )}
               </div>
@@ -284,23 +337,33 @@ export default function ProjectGallery({
                   closeLightbox();
                 }}
                 aria-label="סגור גלריה"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl transition hover:bg-white/20"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-xl transition hover:bg-white/20 sm:h-11 sm:w-11"
               >
                 ×
               </button>
             </div>
 
-            {/* Image stage */}
             <div
-              className="group/lightbox relative flex min-h-0 flex-1 items-center justify-center px-3 pb-3 sm:px-16 sm:pb-5"
-              onClick={(event) => event.stopPropagation()}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
+              className="relative flex min-h-0 flex-1 items-center justify-center px-2 py-2 sm:px-16 sm:py-4"
+              onClick={(event) =>
+                event.stopPropagation()
+              }
+              onTouchStart={
+                handleTouchStart
+              }
+              onTouchMove={
+                handleTouchMove
+              }
+              onTouchEnd={
+                handleTouchEnd
+              }
             >
               <Image
                 src={selectedImage.url}
-                alt={selectedImage.alt || title}
+                alt={
+                  selectedImage.alt ||
+                  title
+                }
                 fill
                 sizes="100vw"
                 draggable={false}
@@ -311,18 +374,22 @@ export default function ProjectGallery({
                 <>
                   <button
                     type="button"
-                    onClick={showPrevious}
+                    onClick={
+                      showPrevious
+                    }
                     aria-label="תמונה קודמת"
-                    className="absolute right-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-2xl backdrop-blur transition hover:bg-white/20 sm:right-6 sm:h-14 sm:w-14"
+                    className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-xl backdrop-blur transition hover:bg-white/20 sm:right-6 sm:h-14 sm:w-14 sm:text-2xl"
                   >
                     →
                   </button>
 
                   <button
                     type="button"
-                    onClick={showNext}
+                    onClick={
+                      showNext
+                    }
                     aria-label="תמונה הבאה"
-                    className="absolute left-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-2xl backdrop-blur transition hover:bg-white/20 sm:left-6 sm:h-14 sm:w-14"
+                    className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-xl backdrop-blur transition hover:bg-white/20 sm:left-6 sm:h-14 sm:w-14 sm:text-2xl"
                   >
                     ←
                   </button>
@@ -330,42 +397,57 @@ export default function ProjectGallery({
               )}
             </div>
 
-            {/* Lightbox thumbnails */}
             {hasMultipleImages && (
               <div
-                className="border-t border-white/10 px-4 py-3 sm:px-6"
-                onClick={(event) => event.stopPropagation()}
+                className="border-t border-white/10 bg-black/35 px-3 py-3 sm:px-6"
+                onClick={(event) =>
+                  event.stopPropagation()
+                }
               >
-                <div className="mx-auto flex max-w-4xl gap-2 overflow-x-auto pb-1">
-                  {images.map((image, index) => {
-                    const selected = selectedIndex === index;
+                <div className="mx-auto flex max-w-5xl gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
+                  {images.map(
+                    (
+                      image,
+                      index
+                    ) => {
+                      const selected =
+                        selectedIndex ===
+                        index;
 
-                    return (
-                      <button
-                        key={image.id}
-                        type="button"
-                        onClick={() => setSelectedIndex(index)}
-                        aria-label={`הצג תמונה ${index + 1}`}
-                        aria-current={selected ? "true" : undefined}
-                        className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition sm:h-20 sm:w-20 ${
-                          selected
-                            ? "border-amber-500 opacity-100"
-                            : "border-transparent opacity-50 hover:opacity-100"
-                        }`}
-                      >
-                        <Image
-                          src={image.url}
-                          alt={
-                            image.alt ||
-                            `${title} - תמונה ${index + 1}`
+                      return (
+                        <button
+                          key={
+                            image.id
                           }
-                          fill
-                          sizes="80px"
-                          className="object-cover"
-                        />
-                      </button>
-                    );
-                  })}
+                          type="button"
+                          onClick={() =>
+                            setSelectedIndex(
+                              index
+                            )
+                          }
+                          className={`relative aspect-[4/3] w-[82px] shrink-0 overflow-hidden rounded-lg border transition sm:w-[105px] ${
+                            selected
+                              ? "border-white opacity-100"
+                              : "border-white/10 opacity-45 hover:opacity-90"
+                          }`}
+                          aria-label={`הצג תמונה ${index + 1}`}
+                        >
+                          <Image
+                            src={
+                              image.url
+                            }
+                            alt={
+                              image.alt ||
+                              title
+                            }
+                            fill
+                            sizes="110px"
+                            className="object-cover"
+                          />
+                        </button>
+                      );
+                    }
+                  )}
                 </div>
               </div>
             )}
