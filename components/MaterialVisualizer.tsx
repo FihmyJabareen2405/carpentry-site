@@ -1060,27 +1060,27 @@ export default function MaterialVisualizer() {
   return (
     <section
       dir="rtl"
-      className="bg-[#f5f4f0] px-3 py-5 sm:px-5 lg:px-7 lg:py-7"
+      className="overflow-x-hidden bg-[#f5f4f0] px-2 py-3 sm:px-5 sm:py-5 lg:px-7 lg:py-7"
     >
       <div className="mx-auto max-w-[1600px]">
-        <div className="mb-5 flex flex-col gap-4 rounded-[1.7rem] border border-stone-200 bg-white px-5 py-5 shadow-sm sm:px-7 md:flex-row md:items-center md:justify-between">
+        <div className="mb-3 flex flex-col gap-3 rounded-[1.35rem] border border-stone-200 bg-white px-4 py-4 shadow-sm sm:mb-5 sm:rounded-[1.7rem] sm:px-7 sm:py-5 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-xs font-medium tracking-[0.2em] text-amber-700">
               MATERIAL VISUALIZER
             </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-stone-900 md:text-4xl">
+            <h1 className="mt-1.5 text-2xl font-semibold leading-tight tracking-[-0.03em] text-stone-900 sm:text-3xl md:text-4xl">
               מעצבים ורואים את השינוי מיד
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-500">
+            <p className="mt-2 hidden max-w-2xl text-sm leading-6 text-stone-500 sm:block">
               התצוגה נשארת מול העיניים. כל הבחירות נמצאות בלוח הבקרה שלצידה.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap">
             <button
               type="button"
               onClick={reset}
-              className="min-h-10 rounded-full border border-stone-300 bg-white px-4 text-sm font-medium text-stone-700 transition hover:bg-stone-100"
+              className="min-h-10 w-full rounded-full border border-stone-300 bg-white px-3 text-xs font-medium text-stone-700 transition hover:bg-stone-100 sm:w-auto sm:px-4 sm:text-sm"
             >
               איפוס
             </button>
@@ -1088,7 +1088,7 @@ export default function MaterialVisualizer() {
             <button
               type="button"
               onClick={swapSides}
-              className="inline-flex min-h-10 items-center gap-2 rounded-full bg-stone-900 px-4 text-sm font-medium text-white transition hover:bg-amber-700"
+              className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full bg-stone-900 px-3 text-xs font-medium text-white transition hover:bg-amber-700 sm:w-auto sm:px-4 sm:text-sm"
             >
               <SwapIcon />
               החלף צדדים
@@ -1096,14 +1096,14 @@ export default function MaterialVisualizer() {
           </div>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_420px] lg:items-start">
+        <div className="grid min-w-0 gap-3 sm:gap-5 lg:grid-cols-[minmax(0,1.35fr)_420px] lg:items-start">
           {/* PREVIEW */}
-          <div className="lg:sticky lg:top-24">
-            <div className="overflow-hidden rounded-[1.8rem] border border-stone-200 bg-white shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 px-5 py-4">
+          <div className="sticky top-[68px] z-30 min-w-0 self-start sm:top-20 lg:top-24">
+            <div className="overflow-hidden rounded-[1.35rem] border border-stone-200 bg-white shadow-md sm:rounded-[1.8rem] sm:shadow-sm">
+              <div className="flex items-center justify-between gap-2 border-b border-stone-100 px-3 py-2.5 sm:px-5 sm:py-4">
                 <div>
                   <p className="text-[11px] text-stone-400">התצוגה שלכם</p>
-                  <p className="mt-1 font-medium text-stone-900">
+                  <p className="mt-0.5 max-w-[170px] truncate text-xs font-medium text-stone-900 sm:mt-1 sm:max-w-none sm:text-base">
                     {rightName} + {leftName}
                   </p>
                 </div>
@@ -1135,7 +1135,7 @@ export default function MaterialVisualizer() {
                 </div>
               </div>
 
-              <div className="relative overflow-hidden bg-[#dedbd4] p-3 sm:p-5">
+              <div className="relative overflow-hidden bg-[#dedbd4] p-1.5 sm:p-5">
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-black/[0.05]" />
 
                 <div ref={previewRef} className="relative mx-auto max-w-5xl">
@@ -1158,17 +1158,17 @@ export default function MaterialVisualizer() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 border-t border-stone-100">
+              <div className="hidden grid-cols-2 border-t border-stone-100 sm:grid">
                 <SelectionLabel title="צד ימין" value={rightName} />
                 <SelectionLabel title="צד שמאל" value={leftName} last />
               </div>
 
-              <div className="flex flex-wrap justify-center gap-2 border-t border-stone-100 px-4 py-4">
+              <div className="grid grid-cols-3 gap-1.5 border-t border-stone-100 px-2 py-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-2 sm:px-4 sm:py-4">
                 <button
                   type="button"
                   onClick={saveCombinationImage}
                   disabled={isSavingImage || isSharingImage}
-                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-stone-900 px-4 text-xs font-semibold text-white transition hover:bg-stone-700 disabled:cursor-wait disabled:opacity-60 sm:text-sm"
+                  className="inline-flex min-h-9 items-center justify-center gap-1 rounded-full bg-stone-900 px-2 text-[10px] font-semibold text-white transition hover:bg-stone-700 disabled:cursor-wait disabled:opacity-60 sm:min-h-10 sm:gap-2 sm:px-4 sm:text-sm"
                 >
                   <span aria-hidden="true">↓</span>
                   {isSavingImage ? "שומר..." : "הורד תמונה"}
@@ -1178,7 +1178,7 @@ export default function MaterialVisualizer() {
                   type="button"
                   onClick={shareCombinationImage}
                   disabled={isSavingImage || isSharingImage}
-                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-4 text-xs font-semibold text-stone-900 transition hover:bg-stone-50 disabled:cursor-wait disabled:opacity-60 sm:text-sm"
+                  className="inline-flex min-h-9 items-center justify-center gap-1 rounded-full border border-stone-300 bg-white px-2 text-[10px] font-semibold text-stone-900 transition hover:bg-stone-50 disabled:cursor-wait disabled:opacity-60 sm:min-h-10 sm:gap-2 sm:px-4 sm:text-sm"
                 >
                   <span aria-hidden="true">↗</span>
                   {isSharingImage ? "מכין..." : "שתף"}
@@ -1187,7 +1187,7 @@ export default function MaterialVisualizer() {
                 <button
                   type="button"
                   onClick={copyCombinationLink}
-                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-4 text-xs font-semibold text-stone-900 transition hover:bg-stone-50 sm:text-sm"
+                  className="inline-flex min-h-9 items-center justify-center gap-1 rounded-full border border-stone-300 bg-white px-2 text-[10px] font-semibold text-stone-900 transition hover:bg-stone-50 sm:min-h-10 sm:gap-2 sm:px-4 sm:text-sm"
                 >
                   <span aria-hidden="true">🔗</span>
                   {linkCopied ? "הועתק ✓" : "העתק קישור"}
@@ -1197,13 +1197,13 @@ export default function MaterialVisualizer() {
           </div>
 
           {/* CONTROLS */}
-          <aside className="space-y-4 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pl-1">
-            <div className="rounded-[1.6rem] border border-stone-200 bg-white p-4 shadow-sm">
+          <aside className="min-w-0 space-y-3 sm:space-y-4 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pl-1">
+            <div className="rounded-[1.3rem] border border-stone-200 bg-white p-3 shadow-sm sm:rounded-[1.6rem] sm:p-4">
               <p className="text-[11px] font-medium tracking-[0.18em] text-stone-400">
                 עריכת חזית
               </p>
 
-              <div className="mt-3 grid grid-cols-2 gap-2 rounded-2xl bg-stone-100 p-1">
+              <div className="mt-2 grid grid-cols-2 gap-1.5 rounded-xl bg-stone-100 p-1 sm:mt-3 sm:gap-2 sm:rounded-2xl">
                 <button
                   type="button"
                   onClick={() => setActiveSide("right")}
@@ -1214,7 +1214,7 @@ export default function MaterialVisualizer() {
                   }`}
                 >
                   צד ימין
-                  <span className="mr-2 text-xs opacity-70">{rightName}</span>
+                  <span className="mr-1 block truncate text-[10px] opacity-70 sm:mr-2 sm:inline sm:text-xs">{rightName}</span>
                 </button>
 
                 <button
@@ -1227,13 +1227,13 @@ export default function MaterialVisualizer() {
                   }`}
                 >
                   צד שמאל
-                  <span className="mr-2 text-xs opacity-70">{leftName}</span>
+                  <span className="mr-1 block truncate text-[10px] opacity-70 sm:mr-2 sm:inline sm:text-xs">{leftName}</span>
                 </button>
               </div>
             </div>
 
             {previewMode === "cabinet" && (
-              <div className="rounded-[1.6rem] border border-stone-200 bg-white p-5 shadow-sm">
+              <div className="rounded-[1.3rem] border border-stone-200 bg-white p-4 shadow-sm sm:rounded-[1.6rem] sm:p-5">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[11px] font-medium tracking-[0.18em] text-amber-700">
@@ -1382,12 +1382,12 @@ export default function MaterialVisualizer() {
               onChange={activeSide === "right" ? setRight : setLeft}
             />
 
-            <div className="rounded-[1.6rem] border border-stone-200 bg-white p-5 shadow-sm">
+            <div className="rounded-[1.3rem] border border-stone-200 bg-white p-4 shadow-sm sm:rounded-[1.6rem] sm:p-5">
               <p className="text-[11px] font-medium tracking-[0.18em] text-amber-700">
                 שילובים מוכנים
               </p>
 
-              <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="mt-3 grid auto-cols-[150px] grid-flow-col gap-2 overflow-x-auto pb-2 sm:grid-flow-row sm:grid-cols-2 sm:overflow-visible sm:pb-0">
                 {presets.map((preset) => (
                   <button
                     key={preset.id}
@@ -1418,7 +1418,7 @@ export default function MaterialVisualizer() {
               </div>
             </div>
 
-            <div className="rounded-[1.6rem] bg-stone-950 p-5 text-white shadow-sm">
+            <div className="rounded-[1.3rem] bg-stone-950 p-4 text-white shadow-sm sm:rounded-[1.6rem] sm:p-5">
               <p className="text-xs text-stone-500">השילוב שנבחר</p>
               <p className="mt-2 text-lg font-medium">
                 {rightName} + {leftName}
@@ -1470,7 +1470,7 @@ function MaterialSelector({
     ) => void;
 }) {
   return (
-    <div className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm md:p-8">
+    <div className="rounded-[1.35rem] border border-stone-200 bg-white p-4 shadow-sm sm:rounded-[2rem] sm:p-6 md:p-8">
 
       <div className="flex items-start justify-between gap-4">
 
@@ -1479,7 +1479,7 @@ function MaterialSelector({
             חומר {number}
           </p>
 
-          <h2 className="mt-2 text-2xl font-bold text-stone-900">
+          <h2 className="mt-1 text-xl font-bold text-stone-900 sm:mt-2 sm:text-2xl">
             {title}
           </h2>
         </div>
@@ -1498,7 +1498,7 @@ function MaterialSelector({
         title="סוג חומר"
       >
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
 
           <ChoiceButton
             active={
@@ -1546,7 +1546,7 @@ function MaterialSelector({
             title="בחר סוג עץ"
           >
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
 
               {woods.map(
                 (wood) => (
@@ -1584,7 +1584,7 @@ function MaterialSelector({
             last
           >
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
 
               <ChoiceButton
                 active={
@@ -1635,7 +1635,7 @@ function MaterialSelector({
           title="בחר צבע"
         >
 
-          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+          <div className="grid auto-cols-[82px] grid-flow-col gap-2 overflow-x-auto pb-2 sm:grid sm:grid-flow-row sm:grid-cols-4 sm:overflow-visible sm:pb-0">
 
             {colors.map(
               (color) => (
@@ -1676,7 +1676,7 @@ function MaterialSelector({
           </span>
         </div>
 
-        <div className="grid auto-cols-[132px] grid-flow-col gap-3 overflow-x-auto pb-3 [scrollbar-width:thin]">
+        <div className="grid auto-cols-[112px] grid-flow-col gap-2 overflow-x-auto pb-2 [scrollbar-width:thin] sm:auto-cols-[132px] sm:gap-3 sm:pb-3">
           {handles.map((handle) => (
             <HandleButton
               key={handle.id}
@@ -2304,7 +2304,7 @@ function MaterialBoard({
     >
 
       <div
-        className={`relative aspect-[0.72] min-h-[310px] overflow-hidden border border-black/10 bg-stone-300 shadow-2xl sm:min-h-[450px] md:min-h-[550px] ${
+        className={`relative aspect-[0.72] min-h-[205px] overflow-hidden border border-black/10 bg-stone-300 shadow-lg sm:min-h-[450px] sm:shadow-2xl md:min-h-[550px] ${
           side ===
           "right"
             ? "rounded-r-[1.75rem] rounded-l-md"
@@ -2345,7 +2345,7 @@ function MaterialBoard({
 
         {/* material label */}
 
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 pb-5 pt-20 text-white sm:px-6">
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-2.5 pb-3 pt-12 text-white sm:px-6 sm:pb-5 sm:pt-20">
 
           <p className="text-[10px] uppercase tracking-[0.25em] text-white/60">
             {config.type ===
@@ -2354,7 +2354,7 @@ function MaterialBoard({
               : "COLOR"}
           </p>
 
-          <p className="mt-1 text-lg font-bold sm:text-2xl">
+          <p className="mt-0.5 text-sm font-bold sm:mt-1 sm:text-2xl">
             {name}
           </p>
 
@@ -3014,7 +3014,7 @@ function WoodButton({
     >
 
       <div
-        className="relative h-24 overflow-hidden rounded-xl border border-black/5"
+        className="relative h-16 overflow-hidden rounded-lg border border-black/5 sm:h-24 sm:rounded-xl"
         style={{
           backgroundColor:
             wood.fallback,
@@ -3119,7 +3119,7 @@ function ChoiceButton({
       aria-pressed={
         active
       }
-      className={`min-h-12 rounded-xl border px-4 text-sm font-medium transition ${
+      className={`min-h-10 rounded-xl border px-3 text-xs font-medium transition sm:min-h-12 sm:px-4 sm:text-sm ${
         active
           ? "border-stone-900 bg-stone-900 text-white"
           : "border-stone-200 bg-white text-stone-600 hover:border-stone-400"
@@ -3145,14 +3145,14 @@ function ControlBlock({
 }) {
   return (
     <div
-      className={`py-6 ${
+      className={`py-4 sm:py-6 ${
         !last
           ? "border-b border-stone-100"
           : "pb-0"
       }`}
     >
 
-      <p className="mb-4 text-sm font-medium text-stone-700">
+      <p className="mb-3 text-xs font-medium text-stone-700 sm:mb-4 sm:text-sm">
         {title}
       </p>
 
