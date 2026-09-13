@@ -390,7 +390,7 @@ function LeadProjectCard({
             </div>
 
             <div className="mt-8 flex flex-wrap gap-2">
-              {details.woodTypes.slice(0, 2).map((wood) => (
+              {details.woodTypes.slice(0, 2).map((wood: Relation) => (
                 <DarkTag key={wood.slug}>{wood.name}</DarkTag>
               ))}
 
@@ -480,7 +480,7 @@ function ProjectCard({
           </h2>
 
           <div className="mt-3 flex flex-wrap gap-1.5 sm:mt-4 sm:gap-2">
-            {details.woodTypes.slice(0, 2).map((wood) => (
+            {details.woodTypes.slice(0, 2).map((wood: Relation) => (
               <ProjectTag key={wood.slug}>{wood.name}</ProjectTag>
             ))}
 
