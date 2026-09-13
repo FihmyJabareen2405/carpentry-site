@@ -24,7 +24,7 @@ export default function SiteHeader() {
       dir="rtl"
       className="sticky top-0 z-50 border-b border-stone-200/80 bg-[#faf9f6]/95 backdrop-blur-xl"
     >
-      <div className="mx-auto grid min-h-[82px] max-w-7xl grid-cols-[1fr_auto] items-center gap-5 px-5 md:grid-cols-[1fr_auto_1fr] md:px-8">
+      <div className="mx-auto grid min-h-[82px] max-w-7xl grid-cols-[1fr_auto] items-center gap-5 px-5 xl:grid-cols-[1fr_auto_1fr] md:px-8">
 
         {/* ===================================== */}
         {/* LOGO - RIGHT */}
@@ -62,7 +62,7 @@ export default function SiteHeader() {
         {/* DESKTOP NAVIGATION */}
         {/* ===================================== */}
 
-        <nav className="hidden items-center gap-1 rounded-full border border-stone-200 bg-white/80 p-1.5 shadow-sm md:flex">
+        <nav className="hidden items-center gap-1 rounded-full border border-stone-200 bg-white/80 p-1.5 shadow-sm xl:flex">
           <NavLink
             href="/"
             pathname={pathname}
@@ -103,7 +103,7 @@ export default function SiteHeader() {
         {/* CTA - LEFT */}
         {/* ===================================== */}
 
-        <div className="hidden justify-self-end md:block">
+        <div className="hidden justify-self-end xl:block">
           <Link
             href="/contact"
             className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-stone-900 px-6 text-sm font-medium text-white transition hover:bg-amber-700"
@@ -123,7 +123,7 @@ export default function SiteHeader() {
         {/* MOBILE BUTTON */}
         {/* ===================================== */}
 
-        <div className="justify-self-end md:hidden">
+        <div className="justify-self-end xl:hidden">
           <button
             type="button"
             onClick={() =>
@@ -172,9 +172,9 @@ export default function SiteHeader() {
       {/* ===================================== */}
 
       <div
-        className={`overflow-hidden border-stone-200 bg-[#faf9f6] transition-all duration-300 md:hidden ${
+        className={`overflow-hidden border-stone-200 bg-[#faf9f6] transition-all duration-300 xl:hidden ${
           menuOpen
-            ? "max-h-[430px] border-t opacity-100"
+            ? "max-h-[520px] border-t opacity-100"
             : "max-h-0 border-t-0 opacity-0"
         }`}
       >
