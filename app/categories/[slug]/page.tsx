@@ -11,6 +11,12 @@ type CategoryConfig = {
   tips: string[];
 };
 
+type StyleCard = {
+  title: string;
+  subtitle: string;
+  image: string;
+};
+
 const CATEGORY_CONTENT: Record<string, CategoryConfig> = {
   kitchens: {
     title: "מטבחים",
@@ -108,6 +114,48 @@ const CATEGORY_CONTENT: Record<string, CategoryConfig> = {
   },
 };
 
+const KITCHEN_STYLES: StyleCard[] = [
+  {
+    title: "המטבח המודרני",
+    subtitle:
+      "מינימליזם, קווים נקיים וחזיתות חלקות. מראה מדויק, פונקציונלי ומסודר עם דגש על פתרונות פתיחה נקיים.",
+    image: "/categories/details/kitchens/01.png",
+  },
+  {
+    title: "המטבח הכפרי ופרובאנס",
+    subtitle:
+      "אווירה חמה ומשפחתית, שימוש בעץ וגוונים רכים, חזיתות עם מסגרות ופרזול בעל אופי קלאסי.",
+    image: "/categories/details/kitchens/02.png",
+  },
+  {
+    title: "המטבח התעשייתי אורבני",
+    subtitle:
+      "שילוב של עץ, מתכת, בטון וגוונים כהים. סגנון שמושפע מלופטים עירוניים ומעניק לחלל אופי חזק.",
+    image: "/categories/details/kitchens/03.png",
+  },
+];
+
+const DOOR_STYLES: StyleCard[] = [
+  {
+    title: "דלתות כניסה מעץ",
+    subtitle:
+      "דלת הכניסה משלבת נוכחות עיצובית, עמידות וביטחון. ניתן לעבוד עם עץ מלא כמו אלון, אגוז או מהגוני, או עם ליבת פלדה בחיפוי עץ. בדלתות חוץ חשוב לשלב טיפול נגד לחות, מזיקים וקרינת UV, יחד עם מנגנוני נעילה איכותיים.",
+    image: "/categories/details/doors/01.png",
+  },
+  {
+    title: "דלתות פנים לבית ולמשרד",
+    subtitle:
+      "בדלתות פנים הדגש הוא על אסתטיקה, בידוד רעשים ועמידות בשימוש יומיומי. אפשר לבחור בין למינטו, פורמייקה, פורניר או דלתות צבע בגימור אפוקסי או שלייפלק, בהתאם לסגנון, לתקציב ולרמת העמידות הרצויה.",
+    image: "/categories/details/doors/02.png",
+  },
+  {
+    title: "דלתות למוסדות ומבני ציבור",
+    subtitle:
+      "דלתות לשימוש אינטנסיבי מתוכננות לעמידות גבוהה במיוחד. הן יכולות לכלול ציפוי HPL, משקופים מאסיביים, הגנה על אצבעות, חלון הצצה, מילוי כבד וצירים מחוזקים. התכנון נעשה לפי אופי המבנה והדרישות התפעוליות שלו.",
+    image: "/categories/details/doors/03.png",
+  },
+];
+
 export function generateStaticParams() {
   return Object.keys(CATEGORY_CONTENT).map((slug) => ({ slug }));
 }
@@ -200,39 +248,100 @@ export default async function CategoryPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1450px] px-3 pb-20 sm:px-5 md:pb-28">
-        <div className="grid auto-rows-[180px] grid-cols-2 gap-3 sm:auto-rows-[230px] sm:gap-4 md:grid-cols-12 md:auto-rows-[90px]">
-          <div className="relative col-span-2 row-span-3 overflow-hidden rounded-[1.6rem] md:col-span-7 md:row-span-6">
-            <Image
-              src={images[0]}
-              alt={`${category.title} - תמונה 1`}
-              fill
-              sizes="(max-width: 768px) 100vw, 60vw"
-              className="object-cover"
-            />
+      {slug === "kitchens" || slug === "doors" ? (
+        <section className="mx-auto max-w-[1450px] px-3 pb-20 sm:px-5 md:pb-28">
+          <div className="mb-8 px-3 sm:px-4 md:mb-12">
+            <p className="text-xs font-medium tracking-[0.22em] text-stone-500">
+              {slug === "kitchens" ? "סגנונות מטבח" : "סוגי דלתות"}
+            </p>
+
+            <h2 className="mt-4 text-4xl font-light tracking-[-0.03em] md:text-5xl">
+              {slug === "kitchens" ? (
+                <>
+                  בחרו את השפה
+                  <br />
+                  שמתאימה לבית שלכם.
+                </>
+              ) : (
+                <>
+                  התאמה נכונה
+                  <br />
+                  לכל שימוש ולכל חלל.
+                </>
+              )}
+            </h2>
           </div>
 
-          <div className="relative col-span-1 row-span-2 overflow-hidden rounded-[1.6rem] md:col-span-5 md:row-span-3">
-            <Image
-              src={images[1]}
-              alt={`${category.title} - תמונה 2`}
-              fill
-              sizes="(max-width: 768px) 50vw, 40vw"
-              className="object-cover"
-            />
-          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {(slug === "kitchens" ? KITCHEN_STYLES : DOOR_STYLES).map(
+              (style, index) => (
+                <article
+                  key={style.title}
+                  className="group relative min-h-[420px] overflow-hidden rounded-[1.7rem] bg-stone-900 md:min-h-[520px]"
+                >
+                  <Image
+                    src={style.image}
+                    alt={style.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition duration-700 group-hover:scale-[1.035]"
+                  />
 
-          <div className="relative col-span-1 row-span-2 overflow-hidden rounded-[1.6rem] md:col-span-5 md:row-span-3">
-            <Image
-              src={images[2]}
-              alt={`${category.title} - תמונה 3`}
-              fill
-              sizes="(max-width: 768px) 50vw, 40vw"
-              className="object-cover"
-            />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/28 to-black/5" />
+
+                  <div className="absolute inset-x-0 bottom-0 z-10 p-6 text-white sm:p-7">
+                    <span className="text-xs font-medium tracking-[0.18em] text-[#d7b58c]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+
+                    <h3 className="mt-3 text-3xl font-medium tracking-[-0.03em]">
+                      {style.title}
+                    </h3>
+
+                    <p className="mt-4 max-w-md text-sm leading-7 text-white/76">
+                      {style.subtitle}
+                    </p>
+                  </div>
+                </article>
+              )
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section className="mx-auto max-w-[1450px] px-3 pb-20 sm:px-5 md:pb-28">
+          <div className="grid auto-rows-[180px] grid-cols-2 gap-3 sm:auto-rows-[230px] sm:gap-4 md:grid-cols-12 md:auto-rows-[90px]">
+            <div className="relative col-span-2 row-span-3 overflow-hidden rounded-[1.6rem] md:col-span-7 md:row-span-6">
+              <Image
+                src={images[0]}
+                alt={`${category.title} - תמונה 1`}
+                fill
+                sizes="(max-width: 768px) 100vw, 60vw"
+                className="object-cover"
+              />
+            </div>
+
+            <div className="relative col-span-1 row-span-2 overflow-hidden rounded-[1.6rem] md:col-span-5 md:row-span-3">
+              <Image
+                src={images[1]}
+                alt={`${category.title} - תמונה 2`}
+                fill
+                sizes="(max-width: 768px) 50vw, 40vw"
+                className="object-cover"
+              />
+            </div>
+
+            <div className="relative col-span-1 row-span-2 overflow-hidden rounded-[1.6rem] md:col-span-5 md:row-span-3">
+              <Image
+                src={images[2]}
+                alt={`${category.title} - תמונה 3`}
+                fill
+                sizes="(max-width: 768px) 50vw, 40vw"
+                className="object-cover"
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="mx-3 overflow-hidden rounded-[1.8rem] bg-[#1d1c19] text-white sm:mx-5 sm:rounded-[2.2rem] lg:mx-7">
         <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 sm:px-8 md:grid-cols-[0.85fr_1.15fr] md:py-24">
