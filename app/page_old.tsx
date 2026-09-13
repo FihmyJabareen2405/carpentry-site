@@ -376,7 +376,7 @@ export default async function HomePage() {
               </p>
 
               <h2 className="mt-4 text-4xl font-light tracking-tight md:text-6xl">
-                בתים אמיתיים.
+                גלריית לקוחות.
                 <br />
                 <span className="text-stone-400">נגרות שחיה בתוך הבית.</span>
               </h2>

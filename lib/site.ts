@@ -13,6 +13,9 @@ export const SITE_PHONE_HREF = "tel:0526230067";
 
 export const SITE_WHATSAPP_NUMBER = "972526230067";
 
+export const SITE_FACEBOOK_URL =
+  "https://www.facebook.com/share/1C1Nz5VmSe/";
+
 export const SITE_EMAIL = "emad.carpentry@gmail.com";
 
 export const SITE_SERVICE_AREA =

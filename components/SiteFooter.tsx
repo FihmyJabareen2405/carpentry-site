@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import {
   SITE_EMAIL,
+  SITE_FACEBOOK_URL,
   SITE_NAME,
   SITE_PHONE_DISPLAY,
   SITE_PHONE_HREF,
@@ -174,6 +175,18 @@ export default function SiteFooter() {
                     WhatsApp
                   </a>
                 )}
+
+                {SITE_FACEBOOK_URL && (
+                  <a
+                    href={SITE_FACEBOOK_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-blue-400 transition hover:text-blue-300"
+                  >
+                    <FacebookIcon />
+                    Facebook
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -231,6 +244,19 @@ function ContactPlaceholder({
         יעודכן בהמשך
       </span>
     </div>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="h-5 w-5"
+      fill="currentColor"
+    >
+      <path d="M13.5 22v-9h3l.45-3.5H13.5V7.27c0-1.01.28-1.7 1.73-1.7H17V2.44A23.8 23.8 0 0 0 14.41 2C11.84 2 10.08 3.57 10.08 6.45V9.5H7v3.5h3.08v9h3.42Z" />
+    </svg>
   );
 }
 
