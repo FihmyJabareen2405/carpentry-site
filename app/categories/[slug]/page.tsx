@@ -156,6 +156,90 @@ const DOOR_STYLES: StyleCard[] = [
   },
 ];
 
+const MASTER_BEDROOM_STYLES: StyleCard[] = [
+  {
+    title: "מלון בוטיק",
+    subtitle:
+      "אווירה שקטה ומפנקת עם מיטה גדולה, גב מיטה מרופד, טקסטיל עשיר ותאורת אווירה חמה. הנגרות משלבת ארונות, שידות ויחידות אחסון כחלק משפה אחידה של יחידת ההורים.",
+    image: "/categories/details/bedrooms-kids/master-01.png",
+  },
+  {
+    title: "מודרני מינימליסטי",
+    subtitle:
+      "קווים ישרים וניקיון ויזואלי, ארונות קיר בקו נקי, גוונים מונוכרומטיים ונגיעות עץ שמחממות את החלל. מתאים למי שמחפש סדר, פונקציונליות ומראה רגוע.",
+    image: "/categories/details/bedrooms-kids/master-02.png",
+  },
+  {
+    title: "בוהו שיק טבעי",
+    subtitle:
+      "חומרים טבעיים כמו עץ אלון, ראטן ופשתן, גווני אדמה וירוק מרווה, וטקסטורות רכות שמייצרות חדר שינה נעים, חם ומחובר לטבע.",
+    image: "/categories/details/bedrooms-kids/master-03.png",
+  },
+];
+
+const KIDS_BEDROOM_STYLES: StyleCard[] = [
+  {
+    title: "נורדי על זמני",
+    subtitle:
+      "ריהוט לבן ועץ טבעי בהיר, צבעים ניטרליים ואחסון חכם ונגיש. בסיס נקי שיכול לגדול עם הילד ולהשתנות בקלות באמצעות טקסטיל ואביזרים.",
+    image: "/categories/details/bedrooms-kids/kids-01.png",
+  },
+  {
+    title: "הרפתקאות וטבע",
+    subtitle:
+      "חדר שמעודד דמיון ומשחק עם אלמנטים של יער, הרים או מפות עולם, מיטות עץ, פתרונות אחסון חזקים וגוונים כמו כחול מעושן, ירוק וחרדל.",
+    image: "/categories/details/bedrooms-kids/kids-02.png",
+  },
+  {
+    title: "רך וקסום",
+    subtitle:
+      "אווירה נעימה ומזמינה עם גווני פודרה, קורל ופסטל עדין, פינת יצירה, מדפים דקורטיביים ופתרונות נגרות שמאפשרים לחדר להישאר שימושי גם כשהילדה גדלה.",
+    image: "/categories/details/bedrooms-kids/kids-03.png",
+  },
+];
+
+const WALL_CLADDING_STYLES: StyleCard[] = [
+  {
+    title: "חיפוי סרגלי עץ לסלון",
+    subtitle:
+      "קיר כוח חם ומדויק שמחבר בין הטלוויזיה, המזנון והתאורה. סרגלי עץ אנכיים מוסיפים עומק, קצב ותחושת גובה לחלל.",
+    image: "/categories/details/wall-cladding/01.png",
+  },
+  {
+    title: "חיפוי דקורטיבי לכניסה",
+    subtitle:
+      "חיפוי קיר שמעניק לאזור הכניסה נוכחות יוקרתית כבר מהרגע הראשון. ניתן לשלב מראה, קונסולה, תאורה נסתרת ופרטי מתכת.",
+    image: "/categories/details/wall-cladding/02.png",
+  },
+  {
+    title: "חיפוי קיר לחדר שינה",
+    subtitle:
+      "קיר נגרות מאחורי המיטה יוצר תחושה רגועה ועשירה. שילוב של לוחות עץ, סרגלים ותאורה חמה הופך את הקיר לחלק מרכזי בעיצוב החדר.",
+    image: "/categories/details/wall-cladding/03.png",
+  },
+];
+
+const CUSTOM_WORK_STYLES: StyleCard[] = [
+  {
+    title: "ספריות ומשרדים בהתאמה אישית",
+    subtitle:
+      "ספריות קיר, שולחנות עבודה ויחידות אחסון שמתוכננים לפי המידות והצרכים של החלל, עם שילוב מדפים פתוחים, מגירות ותאורה.",
+    image: "/categories/details/custom/01.png",
+  },
+  {
+    title: "נגרות מתחת למדרגות",
+    subtitle:
+      "ניצול מדויק של חללים מאתגרים באמצעות ארונות, מגירות, מדפים ונישות שמותאמים לזווית המדרגות והופכים שטח לא מנוצל לאחסון שימושי.",
+    image: "/categories/details/custom/02.png",
+  },
+  {
+    title: "ויטרינות ויחידות אירוח",
+    subtitle:
+      "יחידות תצוגה ובר עם שילוב עץ, זכוכית, תאורה ומדפים. פתרון דקורטיבי ופונקציונלי לחללי אירוח, פינות אוכל וסלונים.",
+    image: "/categories/details/custom/03.png",
+  },
+];
+
 export function generateStaticParams() {
   return Object.keys(CATEGORY_CONTENT).map((slug) => ({ slug }));
 }
@@ -305,6 +389,169 @@ export default async function CategoryPage({ params }: PageProps) {
                 </article>
               )
             )}
+          </div>
+        </section>
+      ) : slug === "bedrooms-kids" ? (
+        <section className="mx-auto max-w-[1450px] px-3 pb-20 sm:px-5 md:pb-28">
+          <div className="mb-10 px-3 sm:px-4 md:mb-14">
+            <p className="text-xs font-medium tracking-[0.22em] text-stone-500">
+              חדרי שינה וחדרי ילדים
+            </p>
+
+            <h2 className="mt-4 text-4xl font-light tracking-[-0.03em] md:text-5xl">
+              שני עולמות,
+              <br />
+              תכנון אחד מדויק.
+            </h2>
+
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-stone-500 md:text-base">
+              יחידת ההורים מתוכננת כמקום רגוע, פרטי ומאוזן. חדרי הילדים
+              מתוכננים להיות פרקטיים, גמישים ולגדול יחד איתם.
+            </p>
+          </div>
+
+          <div className="mb-16">
+            <div className="mb-6 flex items-end justify-between gap-5 px-3 sm:px-4">
+              <div>
+                <p className="text-xs font-medium tracking-[0.18em] text-[#9a6c3f]">
+                  01 / יחידת הורים
+                </p>
+                <h3 className="mt-3 text-3xl font-light tracking-[-0.03em] md:text-4xl">
+                  חדרי שינה להורים
+                </h3>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              {MASTER_BEDROOM_STYLES.map((style, index) => (
+                <article
+                  key={style.title}
+                  className="group relative min-h-[420px] overflow-hidden rounded-[1.7rem] bg-stone-900 md:min-h-[520px]"
+                >
+                  <Image
+                    src={style.image}
+                    alt={style.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition duration-700 group-hover:scale-[1.035]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/28 to-black/5" />
+                  <div className="absolute inset-x-0 bottom-0 z-10 p-6 text-white sm:p-7">
+                    <span className="text-xs font-medium tracking-[0.18em] text-[#d7b58c]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <h4 className="mt-3 text-3xl font-medium tracking-[-0.03em]">
+                      {style.title}
+                    </h4>
+                    <p className="mt-4 max-w-md text-sm leading-7 text-white/76">
+                      {style.subtitle}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-6 flex items-end justify-between gap-5 px-3 sm:px-4">
+              <div>
+                <p className="text-xs font-medium tracking-[0.18em] text-[#9a6c3f]">
+                  02 / חדרי ילדים
+                </p>
+                <h3 className="mt-3 text-3xl font-light tracking-[-0.03em] md:text-4xl">
+                  חדרים שגדלים יחד איתם
+                </h3>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              {KIDS_BEDROOM_STYLES.map((style, index) => (
+                <article
+                  key={style.title}
+                  className="group relative min-h-[420px] overflow-hidden rounded-[1.7rem] bg-stone-900 md:min-h-[520px]"
+                >
+                  <Image
+                    src={style.image}
+                    alt={style.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition duration-700 group-hover:scale-[1.035]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/28 to-black/5" />
+                  <div className="absolute inset-x-0 bottom-0 z-10 p-6 text-white sm:p-7">
+                    <span className="text-xs font-medium tracking-[0.18em] text-[#d7b58c]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <h4 className="mt-3 text-3xl font-medium tracking-[-0.03em]">
+                      {style.title}
+                    </h4>
+                    <p className="mt-4 max-w-md text-sm leading-7 text-white/76">
+                      {style.subtitle}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : slug === "wall-cladding" || slug === "custom" ? (
+        <section className="mx-auto max-w-[1450px] px-3 pb-20 sm:px-5 md:pb-28">
+          <div className="mb-8 px-3 sm:px-4 md:mb-12">
+            <p className="text-xs font-medium tracking-[0.22em] text-stone-500">
+              {slug === "wall-cladding" ? "סוגי חיפויי קיר" : "עבודות מיוחדות"}
+            </p>
+
+            <h2 className="mt-4 text-4xl font-light tracking-[-0.03em] md:text-5xl">
+              {slug === "wall-cladding" ? (
+                <>
+                  חומר, קצב ותאורה
+                  <br />
+                  שמשנים את הקיר.
+                </>
+              ) : (
+                <>
+                  פתרונות שנבנים
+                  <br />
+                  בדיוק לפי החלל.
+                </>
+              )}
+            </h2>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {(slug === "wall-cladding"
+              ? WALL_CLADDING_STYLES
+              : CUSTOM_WORK_STYLES
+            ).map((style, index) => (
+              <article
+                key={style.title}
+                className="group relative min-h-[420px] overflow-hidden rounded-[1.7rem] bg-stone-900 md:min-h-[520px]"
+              >
+                <Image
+                  src={style.image}
+                  alt={style.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover transition duration-700 group-hover:scale-[1.035]"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/28 to-black/5" />
+
+                <div className="absolute inset-x-0 bottom-0 z-10 p-6 text-white sm:p-7">
+                  <span className="text-xs font-medium tracking-[0.18em] text-[#d7b58c]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <h3 className="mt-3 text-3xl font-medium tracking-[-0.03em]">
+                    {style.title}
+                  </h3>
+
+                  <p className="mt-4 max-w-md text-sm leading-7 text-white/76">
+                    {style.subtitle}
+                  </p>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
       ) : (
