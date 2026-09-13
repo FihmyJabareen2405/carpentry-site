@@ -85,12 +85,7 @@ type HandleKind =
   | "tbar"
   | "arch"
   | "knob"
-  | "recessed"
-  | "edge-pull"
-  | "profile"
-  | "cup"
-  | "slim"
-  | "integrated";
+  | "recessed";
 
 type HandleFinish =
   | "black"
@@ -326,31 +321,6 @@ const handles: HandleOption[] = [
     id: "recessed",
     name: "ידית שקועה",
     kind: "recessed",
-  },
-  {
-    id: "edge-pull",
-    name: "Edge Pull",
-    kind: "edge-pull",
-  },
-  {
-    id: "profile",
-    name: "ידית פרופיל",
-    kind: "profile",
-  },
-  {
-    id: "cup",
-    name: "Cup Handle",
-    kind: "cup",
-  },
-  {
-    id: "slim",
-    name: "ידית דקה",
-    kind: "slim",
-  },
-  {
-    id: "integrated",
-    name: "ידית אינטגרלית",
-    kind: "integrated",
   },
 ];
 
@@ -766,6 +736,7 @@ export default function MaterialVisualizer() {
   const [cabinetType, setCabinetType] = useState<CabinetType>("tall");
   const [frontStyle, setFrontStyle] = useState<FrontStyle>("smooth");
   const [countertopType, setCountertopType] = useState<CountertopType>("white-marble");
+  const [activeSide, setActiveSide] = useState<"right" | "left">("right");
 
   const [
     left,
@@ -1059,540 +1030,392 @@ export default function MaterialVisualizer() {
   return (
     <section
       dir="rtl"
-      className="bg-[#f5f4f0] py-16 md:py-24"
+      className="bg-[#f5f4f0] px-3 py-5 sm:px-5 lg:px-7 lg:py-7"
     >
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
-
-        {/* ======================================== */}
-        {/* HEADER */}
-        {/* ======================================== */}
-
-        <div className="flex flex-wrap items-end justify-between gap-6">
-
+      <div className="mx-auto max-w-[1600px]">
+        <div className="mb-5 flex flex-col gap-4 rounded-[1.7rem] border border-stone-200 bg-white px-5 py-5 shadow-sm sm:px-7 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-sm font-medium text-amber-700">
-              Material Visualizer
+            <p className="text-xs font-medium tracking-[0.2em] text-amber-700">
+              MATERIAL VISUALIZER
             </p>
-
-            <h1 className="mt-3 text-4xl font-bold tracking-tight text-stone-900 md:text-5xl">
-              שלבו חומרים וצבעים
+            <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-stone-900 md:text-4xl">
+              מעצבים ורואים את השינוי מיד
             </h1>
-
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-stone-600">
-              בחרו שני חומרים והניחו
-              אותם זה לצד זה כדי לראות
-              איך הם משתלבים יחד.
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-500">
+              התצוגה נשארת מול העיניים. כל הבחירות נמצאות בלוח הבקרה שלצידה.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
-
             <button
               type="button"
-              onClick={
-                reset
-              }
-              className="min-h-11 rounded-full border border-stone-300 bg-white px-5 text-sm font-medium text-stone-700 transition hover:bg-stone-100"
+              onClick={reset}
+              className="min-h-10 rounded-full border border-stone-300 bg-white px-4 text-sm font-medium text-stone-700 transition hover:bg-stone-100"
             >
               איפוס
             </button>
 
             <button
               type="button"
-              onClick={
-                swapSides
-              }
-              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-stone-900 px-5 text-sm font-medium text-white transition hover:bg-amber-700"
+              onClick={swapSides}
+              className="inline-flex min-h-10 items-center gap-2 rounded-full bg-stone-900 px-4 text-sm font-medium text-white transition hover:bg-amber-700"
             >
               <SwapIcon />
-
               החלף צדדים
             </button>
-
           </div>
         </div>
 
-        {/* ======================================== */}
-        {/* PRESETS */}
-        {/* ======================================== */}
-
-        <div className="mt-10">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-medium text-amber-700">
-                QUICK PRESETS
-              </p>
-              <h2 className="mt-2 text-2xl font-bold text-stone-900">
-                שילובים מוכנים
-              </h2>
-              <p className="mt-2 text-sm text-stone-500">
-                בחרו סגנון מוכן והמשיכו להתאים אותו ידנית.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {presets.map((preset) => (
-              <button
-                key={preset.id}
-                type="button"
-                onClick={() => applyPreset(preset)}
-                className="rounded-2xl border border-stone-200 bg-white p-4 text-right shadow-sm transition hover:-translate-y-0.5 hover:border-stone-400 hover:shadow-md"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex -space-x-2">
-                    <span
-                      className="h-9 w-9 rounded-full border-2 border-white shadow-sm"
-                      style={getPresetSwatchStyle(preset.right)}
-                    />
-                    <span
-                      className="h-9 w-9 rounded-full border-2 border-white shadow-sm"
-                      style={getPresetSwatchStyle(preset.left)}
-                    />
-                  </div>
-
-                  <div className="min-w-0">
-                    <p className="font-medium text-stone-900">
-                      {preset.name}
-                    </p>
-                    <p className="mt-1 truncate text-xs text-stone-500">
-                      {preset.description}
-                    </p>
-                  </div>
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_420px] lg:items-start">
+          {/* PREVIEW */}
+          <div className="lg:sticky lg:top-24">
+            <div className="overflow-hidden rounded-[1.8rem] border border-stone-200 bg-white shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 px-5 py-4">
+                <div>
+                  <p className="text-[11px] text-stone-400">התצוגה שלכם</p>
+                  <p className="mt-1 font-medium text-stone-900">
+                    {rightName} + {leftName}
+                  </p>
                 </div>
-              </button>
-            ))}
-          </div>
-        </div>
 
-        {/* ======================================== */}
-        {/* BIG PREVIEW */}
-        {/* ======================================== */}
-
-        <div className="mt-12 overflow-hidden rounded-[2rem] border border-stone-200 bg-white shadow-sm">
-
-          {/* top */}
-
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-100 px-6 py-4">
-
-            <div>
-              <p className="text-xs text-stone-400">
-                השילוב שלכם
-              </p>
-
-              <p className="mt-1 font-medium text-stone-900">
-                {rightName}
-                {" + "}
-                {leftName}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-1 rounded-full bg-stone-100 p-1 text-xs">
-              <button
-                type="button"
-                onClick={() => setPreviewMode("cabinet")}
-                className={`rounded-full px-3 py-1.5 transition ${
-                  previewMode === "cabinet"
-                    ? "bg-stone-900 text-white shadow-sm"
-                    : "text-stone-500 hover:text-stone-900"
-                }`}
-              >
-                ארון
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setPreviewMode("boards")}
-                className={`rounded-full px-3 py-1.5 transition ${
-                  previewMode === "boards"
-                    ? "bg-stone-900 text-white shadow-sm"
-                    : "text-stone-500 hover:text-stone-900"
-                }`}
-              >
-                לוחות
-              </button>
-            </div>
-
-          </div>
-
-          {previewMode === "cabinet" && (
-            <div className="border-b border-stone-100 bg-white px-6 py-4">
-              <div className="flex flex-wrap justify-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setCabinetType("tall")}
-                  className={`rounded-full border px-4 py-2 text-sm transition ${
-                    cabinetType === "tall"
-                      ? "border-stone-900 bg-stone-900 text-white"
-                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
-                  }`}
-                >
-                  ארון גבוה
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setCabinetType("drawers")}
-                  className={`rounded-full border px-4 py-2 text-sm transition ${
-                    cabinetType === "drawers"
-                      ? "border-stone-900 bg-stone-900 text-white"
-                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
-                  }`}
-                >
-                  ארון תחתון עם מגירות
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setCabinetType("kitchen")}
-                  className={`rounded-full border px-4 py-2 text-sm transition ${
-                    cabinetType === "kitchen"
-                      ? "border-stone-900 bg-stone-900 text-white"
-                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
-                  }`}
-                >
-                  ארון מטבח + משטח עבודה
-                </button>
-              </div>
-            </div>
-          )}
-
-          {previewMode === "cabinet" && (
-            <div className="border-b border-stone-100 bg-stone-50/70 px-6 py-4">
-              <div className="mb-3 text-center text-xs font-medium uppercase tracking-[0.18em] text-stone-500">
-                סגנון חזית
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setFrontStyle("smooth")}
-                  className={`rounded-full border px-4 py-2 text-sm transition ${
-                    frontStyle === "smooth"
-                      ? "border-stone-900 bg-stone-900 text-white"
-                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
-                  }`}
-                >
-                  חלקה
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setFrontStyle("frame")}
-                  className={`rounded-full border px-4 py-2 text-sm transition ${
-                    frontStyle === "frame"
-                      ? "border-stone-900 bg-stone-900 text-white"
-                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
-                  }`}
-                >
-                  מסגרת
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setFrontStyle("grooved")}
-                  className={`rounded-full border px-4 py-2 text-sm transition ${
-                    frontStyle === "grooved"
-                      ? "border-stone-900 bg-stone-900 text-white"
-                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
-                  }`}
-                >
-                  חריצים אנכיים
-                </button>
-              </div>
-            </div>
-          )}
-
-          {previewMode === "cabinet" && cabinetType === "kitchen" && (
-            <div className="border-b border-stone-100 bg-white px-6 py-4">
-              <div className="mb-3 text-center text-xs font-medium uppercase tracking-[0.18em] text-stone-500">
-                משטח עבודה
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-2">
-                {[
-                  ["white-marble", "שיש לבן"],
-                  ["concrete", "בטון"],
-                  ["black", "שחור"],
-                  ["oak", "עץ"],
-                ].map(([id, label]) => (
+                <div className="flex items-center gap-1 rounded-full bg-stone-100 p-1 text-xs">
                   <button
-                    key={id}
                     type="button"
-                    onClick={() => setCountertopType(id as CountertopType)}
-                    className={`rounded-full border px-4 py-2 text-sm transition ${
-                      countertopType === id
-                        ? "border-stone-900 bg-stone-900 text-white"
-                        : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
+                    onClick={() => setPreviewMode("cabinet")}
+                    className={`rounded-full px-3 py-1.5 transition ${
+                      previewMode === "cabinet"
+                        ? "bg-stone-900 text-white shadow-sm"
+                        : "text-stone-500 hover:text-stone-900"
                     }`}
                   >
-                    {label}
+                    ארון
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPreviewMode("boards")}
+                    className={`rounded-full px-3 py-1.5 transition ${
+                      previewMode === "boards"
+                        ? "bg-stone-900 text-white shadow-sm"
+                        : "text-stone-500 hover:text-stone-900"
+                    }`}
+                  >
+                    לוחות
+                  </button>
+                </div>
+              </div>
+
+              <div className="relative overflow-hidden bg-[#dedbd4] p-3 sm:p-5">
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-black/[0.05]" />
+
+                <div ref={previewRef} className="relative mx-auto max-w-5xl">
+                  {previewMode === "cabinet" ? (
+                    <CabinetPreview
+                      right={right}
+                      left={left}
+                      cabinetType={cabinetType}
+                      frontStyle={frontStyle}
+                      countertopType={countertopType}
+                      wallColor={wallColor}
+                      floorType={floorType}
+                    />
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                      <MaterialBoard config={right} side="right" />
+                      <MaterialBoard config={left} side="left" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 border-t border-stone-100">
+                <SelectionLabel title="צד ימין" value={rightName} />
+                <SelectionLabel title="צד שמאל" value={leftName} last />
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-2 border-t border-stone-100 px-4 py-4">
+                <button
+                  type="button"
+                  onClick={saveCombinationImage}
+                  disabled={isSavingImage || isSharingImage}
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-stone-900 px-4 text-xs font-semibold text-white transition hover:bg-stone-700 disabled:cursor-wait disabled:opacity-60 sm:text-sm"
+                >
+                  <span aria-hidden="true">↓</span>
+                  {isSavingImage ? "שומר..." : "הורד תמונה"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={shareCombinationImage}
+                  disabled={isSavingImage || isSharingImage}
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-4 text-xs font-semibold text-stone-900 transition hover:bg-stone-50 disabled:cursor-wait disabled:opacity-60 sm:text-sm"
+                >
+                  <span aria-hidden="true">↗</span>
+                  {isSharingImage ? "מכין..." : "שתף"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={copyCombinationLink}
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-4 text-xs font-semibold text-stone-900 transition hover:bg-stone-50 sm:text-sm"
+                >
+                  <span aria-hidden="true">🔗</span>
+                  {linkCopied ? "הועתק ✓" : "העתק קישור"}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* CONTROLS */}
+          <aside className="space-y-4 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pl-1">
+            <div className="rounded-[1.6rem] border border-stone-200 bg-white p-4 shadow-sm">
+              <p className="text-[11px] font-medium tracking-[0.18em] text-stone-400">
+                עריכת חזית
+              </p>
+
+              <div className="mt-3 grid grid-cols-2 gap-2 rounded-2xl bg-stone-100 p-1">
+                <button
+                  type="button"
+                  onClick={() => setActiveSide("right")}
+                  className={`rounded-xl px-4 py-2.5 text-sm font-medium transition ${
+                    activeSide === "right"
+                      ? "bg-stone-900 text-white shadow-sm"
+                      : "text-stone-600 hover:bg-white"
+                  }`}
+                >
+                  צד ימין
+                  <span className="mr-2 text-xs opacity-70">{rightName}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveSide("left")}
+                  className={`rounded-xl px-4 py-2.5 text-sm font-medium transition ${
+                    activeSide === "left"
+                      ? "bg-stone-900 text-white shadow-sm"
+                      : "text-stone-600 hover:bg-white"
+                  }`}
+                >
+                  צד שמאל
+                  <span className="mr-2 text-xs opacity-70">{leftName}</span>
+                </button>
+              </div>
+            </div>
+
+            {previewMode === "cabinet" && (
+              <div className="rounded-[1.6rem] border border-stone-200 bg-white p-5 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[11px] font-medium tracking-[0.18em] text-amber-700">
+                      תצוגה
+                    </p>
+                    <h2 className="mt-1 text-xl font-semibold text-stone-900">
+                      מבנה וסביבה
+                    </h2>
+                  </div>
+                </div>
+
+                <div className="mt-5">
+                  <p className="mb-2 text-xs font-medium text-stone-500">סוג ארון</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      ["tall", "גבוה"],
+                      ["drawers", "מגירות"],
+                      ["kitchen", "מטבח"],
+                    ].map(([id, label]) => (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => setCabinetType(id as CabinetType)}
+                        className={`rounded-xl border px-2 py-2 text-xs transition ${
+                          cabinetType === id
+                            ? "border-stone-900 bg-stone-900 text-white"
+                            : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-5">
+                  <p className="mb-2 text-xs font-medium text-stone-500">סגנון חזית</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      ["smooth", "חלקה"],
+                      ["frame", "מסגרת"],
+                      ["grooved", "חריצים"],
+                    ].map(([id, label]) => (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => setFrontStyle(id as FrontStyle)}
+                        className={`rounded-xl border px-2 py-2 text-xs transition ${
+                          frontStyle === id
+                            ? "border-stone-900 bg-stone-900 text-white"
+                            : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {cabinetType === "kitchen" && (
+                  <div className="mt-5">
+                    <p className="mb-2 text-xs font-medium text-stone-500">משטח עבודה</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        ["white-marble", "שיש לבן"],
+                        ["concrete", "בטון"],
+                        ["black", "שחור"],
+                        ["oak", "עץ"],
+                      ].map(([id, label]) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setCountertopType(id as CountertopType)}
+                          className={`rounded-xl border px-2 py-2 text-xs transition ${
+                            countertopType === id
+                              ? "border-stone-900 bg-stone-900 text-white"
+                              : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                  <div>
+                    <p className="mb-2 text-xs font-medium text-stone-500">צבע קיר</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[
+                        ["white", "לבן"],
+                        ["cream", "שמנת"],
+                        ["greige", "גרייז׳"],
+                        ["sage", "מרווה"],
+                        ["charcoal", "פחם"],
+                      ].map(([id, label]) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setWallColor(id as WallColor)}
+                          className={`rounded-full border px-2.5 py-1.5 text-[11px] transition ${
+                            wallColor === id
+                              ? "border-stone-900 bg-stone-900 text-white"
+                              : "border-stone-200 bg-white text-stone-600"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="mb-2 text-xs font-medium text-stone-500">רצפה</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[
+                        ["light-wood", "עץ בהיר"],
+                        ["dark-wood", "עץ כהה"],
+                        ["concrete", "בטון"],
+                        ["stone", "אבן"],
+                      ].map(([id, label]) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setFloorType(id as FloorType)}
+                          className={`rounded-full border px-2.5 py-1.5 text-[11px] transition ${
+                            floorType === id
+                              ? "border-stone-900 bg-stone-900 text-white"
+                              : "border-stone-200 bg-white text-stone-600"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <MaterialSelector
+              title={activeSide === "right" ? "צד ימין" : "צד שמאל"}
+              number={activeSide === "right" ? "01" : "02"}
+              value={activeSide === "right" ? right : left}
+              onChange={activeSide === "right" ? setRight : setLeft}
+            />
+
+            <div className="rounded-[1.6rem] border border-stone-200 bg-white p-5 shadow-sm">
+              <p className="text-[11px] font-medium tracking-[0.18em] text-amber-700">
+                שילובים מוכנים
+              </p>
+
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                {presets.map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => applyPreset(preset)}
+                    className="rounded-xl border border-stone-200 bg-stone-50 p-3 text-right transition hover:border-stone-400 hover:bg-white"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="flex -space-x-2">
+                        <span
+                          className="h-7 w-7 rounded-full border-2 border-white shadow-sm"
+                          style={getPresetSwatchStyle(preset.right)}
+                        />
+                        <span
+                          className="h-7 w-7 rounded-full border-2 border-white shadow-sm"
+                          style={getPresetSwatchStyle(preset.left)}
+                        />
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="truncate text-xs font-medium text-stone-900">
+                          {preset.name}
+                        </p>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
             </div>
-          )}
 
-          {previewMode === "cabinet" && (
-            <div className="border-b border-stone-100 bg-stone-50/70 px-6 py-5">
-              <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
-                <div>
-                  <div className="mb-3 text-center text-xs font-medium uppercase tracking-[0.18em] text-stone-500">
-                    צבע קיר
-                  </div>
+            <div className="rounded-[1.6rem] bg-stone-950 p-5 text-white shadow-sm">
+              <p className="text-xs text-stone-500">השילוב שנבחר</p>
+              <p className="mt-2 text-lg font-medium">
+                {rightName} + {leftName}
+              </p>
 
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {[
-                      ["white", "לבן"],
-                      ["cream", "שמנת"],
-                      ["greige", "גרייז׳"],
-                      ["sage", "מרווה"],
-                      ["charcoal", "פחם"],
-                    ].map(([id, label]) => (
-                      <button
-                        key={id}
-                        type="button"
-                        onClick={() => setWallColor(id as WallColor)}
-                        className={`rounded-full border px-4 py-2 text-sm transition ${
-                          wallColor === id
-                            ? "border-stone-900 bg-stone-900 text-white"
-                            : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="mb-3 text-center text-xs font-medium uppercase tracking-[0.18em] text-stone-500">
-                    סוג רצפה
-                  </div>
-
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {[
-                      ["light-wood", "עץ בהיר"],
-                      ["dark-wood", "עץ כהה"],
-                      ["concrete", "בטון"],
-                      ["stone", "אבן"],
-                    ].map(([id, label]) => (
-                      <button
-                        key={id}
-                        type="button"
-                        onClick={() => setFloorType(id as FloorType)}
-                        className={`rounded-full border px-4 py-2 text-sm transition ${
-                          floorType === id
-                            ? "border-stone-900 bg-stone-900 text-white"
-                            : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* material stage */}
-
-          <div className="relative overflow-hidden bg-[#dedbd4] p-5 sm:p-10 md:p-14">
-
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-black/[0.05]" />
-
-            {/* boards */}
-
-            <div
-              ref={previewRef}
-              className="relative mx-auto max-w-5xl"
-            >
-              {previewMode === "cabinet" ? (
-                <CabinetPreview
-                  right={right}
-                  left={left}
-                  cabinetType={cabinetType}
-                  frontStyle={frontStyle}
-                  countertopType={countertopType}
-                  wallColor={wallColor}
-                  floorType={floorType}
-                />
+              {whatsappUrl ? (
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 text-sm font-medium text-white transition hover:bg-[#20bd5a]"
+                >
+                  <WhatsAppIcon />
+                  שלח לעימאד ב-WhatsApp
+                </a>
               ) : (
-                <div className="grid grid-cols-2 gap-2 sm:gap-4">
-                  <MaterialBoard
-                    config={right}
-                    side="right"
-                  />
-
-                  <MaterialBoard
-                    config={left}
-                    side="left"
-                  />
+                <div className="mt-4 rounded-xl bg-white/5 px-4 py-3 text-sm text-stone-400">
+                  מספר WhatsApp לא הוגדר
                 </div>
               )}
             </div>
-        <div className="relative z-30 mt-5 flex flex-wrap justify-center gap-3">
-          <button
-            type="button"
-            onClick={saveCombinationImage}
-            disabled={isSavingImage || isSharingImage}
-            className="relative z-40 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-700 disabled:cursor-wait disabled:opacity-60"
-          >
-            <span aria-hidden="true">↓</span>
-            {isSavingImage ? "שומר תמונה..." : "הורד כתמונה"}
-          </button>
 
-          <button
-            type="button"
-            onClick={shareCombinationImage}
-            disabled={isSavingImage || isSharingImage}
-            className="relative z-40 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-6 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:bg-stone-50 disabled:cursor-wait disabled:opacity-60"
-          >
-            <span aria-hidden="true">↗</span>
-            {isSharingImage ? "מכין לשיתוף..." : "שתף את השילוב"}
-          </button>
-
-          <button
-            type="button"
-            onClick={copyCombinationLink}
-            className="relative z-40 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-6 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:bg-stone-50"
-          >
-            <span aria-hidden="true">🔗</span>
-            {linkCopied ? "הקישור הועתק ✓" : "העתק קישור לשילוב"}
-          </button>
+            <p className="px-3 pb-2 text-center text-[11px] leading-5 text-stone-400">
+              הדוגמאות מיועדות להמחשה בלבד. גוונים וטקסטורות עשויים להיראות מעט שונה במציאות.
+            </p>
+          </aside>
         </div>
-
-
-            {/* joint */}
-
-            <div className="pointer-events-none absolute bottom-12 left-1/2 top-12 z-20 w-px -translate-x-1/2 bg-black/20 shadow-[0_0_10px_rgba(0,0,0,0.15)]" />
-
-            {/* bottom shadow */}
-
-            <div className="relative mx-auto mt-8 h-5 max-w-4xl rounded-full bg-black/15 blur-xl" />
-
-          </div>
-
-          {/* labels */}
-
-          <div className="grid grid-cols-2 border-t border-stone-100">
-
-            <SelectionLabel
-              title="צד ימין"
-              value={
-                rightName
-              }
-            />
-
-            <SelectionLabel
-              title="צד שמאל"
-              value={
-                leftName
-              }
-              last
-            />
-
-          </div>
-        </div>
-
-        {/* ======================================== */}
-        {/* MATERIAL CONTROLS */}
-        {/* ======================================== */}
-
-        <div className="mt-8 grid gap-8 lg:grid-cols-2">
-
-          <MaterialSelector
-            title="צד ימין"
-            number="01"
-            value={
-              right
-            }
-            onChange={
-              setRight
-            }
-          />
-
-          <MaterialSelector
-            title="צד שמאל"
-            number="02"
-            value={
-              left
-            }
-            onChange={
-              setLeft
-            }
-          />
-
-        </div>
-
-        {/* ======================================== */}
-        {/* SUMMARY */}
-        {/* ======================================== */}
-
-        <div className="mt-8 rounded-[2rem] bg-stone-950 p-6 text-white md:p-8">
-
-          <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
-
-            <div>
-              <p className="text-xs text-stone-500">
-                השילוב שנבחר
-              </p>
-
-              <div className="mt-4 flex flex-wrap items-center gap-3 text-xl font-medium md:text-2xl">
-
-                <span>
-                  {rightName}
-                </span>
-
-                <span className="text-stone-600">
-                  +
-                </span>
-
-                <span>
-                  {leftName}
-                </span>
-
-              </div>
-
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-stone-400">
-                שילוב זה יכול לשמש
-                בחזיתות, ארונות,
-                ספריות, דלתות,
-                חיפויי קיר ועבודות
-                נגרות נוספות.
-              </p>
-            </div>
-
-            {whatsappUrl ? (
-              <a
-                href={
-                  whatsappUrl
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-[#25D366] px-7 text-sm font-medium text-white transition hover:bg-[#20bd5a]"
-              >
-                <WhatsAppIcon />
-
-                שלח את השילוב
-              </a>
-            ) : (
-              <div className="rounded-xl bg-white/5 px-5 py-3 text-sm text-stone-400">
-                מספר WhatsApp
-                לא הוגדר
-              </div>
-            )}
-
-          </div>
-        </div>
-
-        <p className="mt-6 text-center text-xs leading-6 text-stone-400">
-          הדוגמאות מיועדות להמחשה בלבד.
-          גוונים וטקסטורות עשויים
-          להיראות מעט שונה במציאות.
-        </p>
-
       </div>
     </section>
   );
@@ -2083,7 +1906,7 @@ function CabinetPreview({
   return (
     <div className="relative overflow-hidden rounded-[2rem] border border-black/10 shadow-2xl">
       <div
-        className={`relative overflow-hidden px-3 pb-6 pt-5 sm:min-h-[590px] sm:px-10 sm:pb-16 sm:pt-14 md:min-h-[650px] md:px-14 ${
+        className={`relative overflow-hidden px-3 pb-6 pt-5 sm:min-h-[500px] sm:px-8 sm:pb-12 sm:pt-10 md:min-h-[560px] md:px-10 ${
           cabinetType === "drawers"
             ? "min-h-[300px]"
             : cabinetType === "kitchen"
@@ -2565,11 +2388,11 @@ function MaterialSurface({
       }}
     >
       <div
-        className="absolute bg-center bg-cover bg-no-repeat"
+        key={`${wood.id}-${config.grain}`}
+        className="absolute bg-center bg-cover bg-no-repeat transition-transform duration-300"
         style={{
           inset:
-            config.grain ===
-            "horizontal"
+            config.grain === "vertical"
               ? "-25%"
               : "0",
 
@@ -2577,10 +2400,9 @@ function MaterialSurface({
             `url("${wood.image}")`,
 
           transform:
-            config.grain ===
-            "horizontal"
+            config.grain === "vertical"
               ? "rotate(90deg) scale(1.25)"
-              : "none",
+              : "rotate(0deg) scale(1)",
 
           transformOrigin:
             "center",
@@ -2774,158 +2596,6 @@ function HandleGraphic({
     );
   }
 
-  if (kind === "edge-pull") {
-    return (
-      <svg
-        viewBox="0 0 320 100"
-        aria-hidden="true"
-        className="block h-auto w-full overflow-visible"
-        style={{ filter: shadow }}
-      >
-        <defs>
-          <linearGradient id={`edge-${finish}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={metal.light} />
-            <stop offset="48%" stopColor={metal.main} />
-            <stop offset="100%" stopColor={metal.dark} />
-          </linearGradient>
-        </defs>
-        <ellipse cx="160" cy="78" rx="128" ry="7" fill="rgba(0,0,0,.10)" />
-        <path
-          d="M42 38H278L263 58H57Z"
-          fill={`url(#edge-${finish})`}
-        />
-        <path
-          d="M57 58H263"
-          stroke="rgba(255,255,255,.18)"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
-
-  if (kind === "profile") {
-    return (
-      <svg
-        viewBox="0 0 320 100"
-        aria-hidden="true"
-        className="block h-auto w-full overflow-visible"
-        style={{ filter: shadow }}
-      >
-        <defs>
-          <linearGradient id={`profile-${finish}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={metal.light} />
-            <stop offset="52%" stopColor={metal.main} />
-            <stop offset="100%" stopColor={metal.dark} />
-          </linearGradient>
-        </defs>
-        <ellipse cx="160" cy="79" rx="118" ry="6" fill="rgba(0,0,0,.10)" />
-        <path
-          d="M46 34H274V50H62V66H46Z"
-          fill={`url(#profile-${finish})`}
-        />
-        <path
-          d="M62 50H268"
-          stroke="rgba(255,255,255,.18)"
-          strokeWidth="2.5"
-        />
-      </svg>
-    );
-  }
-
-  if (kind === "cup") {
-    return (
-      <svg
-        viewBox="0 0 300 120"
-        aria-hidden="true"
-        className="block h-auto w-full overflow-visible"
-        style={{ filter: shadow }}
-      >
-        <defs>
-          <linearGradient id={`cup-${finish}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={metal.light} />
-            <stop offset="48%" stopColor={metal.main} />
-            <stop offset="100%" stopColor={metal.dark} />
-          </linearGradient>
-        </defs>
-        <ellipse cx="150" cy="94" rx="103" ry="7" fill="rgba(0,0,0,.12)" />
-        <path
-          d="M58 42C78 27 222 27 242 42L226 82C208 94 92 94 74 82Z"
-          fill={`url(#cup-${finish})`}
-        />
-        <path
-          d="M78 49C104 39 196 39 222 49"
-          fill="none"
-          stroke="rgba(255,255,255,.22)"
-          strokeWidth="4"
-          strokeLinecap="round"
-        />
-        <circle cx="78" cy="57" r="5" fill={metal.dark} />
-        <circle cx="222" cy="57" r="5" fill={metal.dark} />
-      </svg>
-    );
-  }
-
-  if (kind === "slim") {
-    return (
-      <svg
-        viewBox="0 0 360 90"
-        aria-hidden="true"
-        className="block h-auto w-full overflow-visible"
-        style={{ filter: shadow }}
-      >
-        <defs>
-          <linearGradient id={`slim-${finish}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={metal.light} />
-            <stop offset="42%" stopColor={metal.main} />
-            <stop offset="100%" stopColor={metal.dark} />
-          </linearGradient>
-        </defs>
-        <ellipse cx="180" cy="70" rx="132" ry="5" fill="rgba(0,0,0,.10)" />
-        <rect
-          x="40"
-          y="31"
-          width="280"
-          height="10"
-          rx="5"
-          fill={`url(#slim-${finish})`}
-        />
-        <rect x="68" y="40" width="8" height="23" rx="4" fill={metal.dark} />
-        <rect x="284" y="40" width="8" height="23" rx="4" fill={metal.dark} />
-      </svg>
-    );
-  }
-
-  if (kind === "integrated") {
-    return (
-      <svg
-        viewBox="0 0 320 100"
-        aria-hidden="true"
-        className="block h-auto w-full overflow-visible"
-        style={{ filter: shadow }}
-      >
-        <defs>
-          <linearGradient id={`integrated-${finish}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={metal.light} />
-            <stop offset="50%" stopColor={metal.main} />
-            <stop offset="100%" stopColor={metal.dark} />
-          </linearGradient>
-        </defs>
-        <ellipse cx="160" cy="79" rx="119" ry="6" fill="rgba(0,0,0,.09)" />
-        <path
-          d="M42 33H278V48H195C186 48 179 54 179 63H141C141 54 134 48 125 48H42Z"
-          fill={`url(#integrated-${finish})`}
-        />
-        <path
-          d="M141 63H179"
-          stroke={metal.dark}
-          strokeWidth="8"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
-
   if (kind === "arch") {
     return (
       <svg
@@ -3064,7 +2734,7 @@ function HandleButton({
       >
         {item.kind === "none" ? (
           <div className="flex flex-col items-center gap-2 text-stone-400">
-            <span className="text-2xl">.</span>
+            <span className="text-2xl">—</span>
             <span className="text-xs">ללא ידית</span>
           </div>
         ) : (
@@ -3137,11 +2807,11 @@ function WoodButton({
       >
 
         <div
-          className="absolute bg-cover bg-center"
+          key={`${wood.id}-${grain}`}
+          className="absolute bg-cover bg-center transition-transform duration-300"
           style={{
             inset:
-              grain ===
-              "horizontal"
+              grain === "vertical"
                 ? "-30%"
                 : "0",
 
@@ -3149,10 +2819,11 @@ function WoodButton({
               `url("${wood.image}")`,
 
             transform:
-              grain ===
-              "horizontal"
+              grain === "vertical"
                 ? "rotate(90deg) scale(1.3)"
-                : "none",
+                : "rotate(0deg) scale(1)",
+
+            transformOrigin: "center",
           }}
         />
 

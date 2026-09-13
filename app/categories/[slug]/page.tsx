@@ -302,14 +302,14 @@ export default async function CategoryPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20 sm:px-8 md:py-28">
-        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <section className="mx-auto max-w-7xl px-6 py-12 sm:px-8 md:py-16">
+        <div className="grid gap-7 lg:grid-cols-[0.78fr_1.22fr] lg:gap-12">
           <div>
-            <p className="text-xs font-medium tracking-[0.22em] text-stone-500">
+            <p className="text-[11px] font-medium tracking-[0.22em] text-stone-500">
               מה אנחנו עושים
             </p>
 
-            <h2 className="mt-5 text-4xl font-light leading-tight tracking-[-0.03em] md:text-5xl">
+            <h2 className="mt-3 text-3xl font-light leading-tight tracking-[-0.03em] md:text-4xl">
               תכנון שמתחיל
               <br />
               בצורך האמיתי.
@@ -320,12 +320,12 @@ export default async function CategoryPage({ params }: PageProps) {
             {category.services.map((service, index) => (
               <div
                 key={service}
-                className="grid grid-cols-[52px_1fr] gap-4 py-5 sm:grid-cols-[70px_1fr] sm:py-6"
+                className="grid grid-cols-[42px_1fr] gap-3 py-3 sm:grid-cols-[54px_1fr] sm:py-4"
               >
-                <span className="text-sm text-[#a8784f]">
+                <span className="text-xs text-[#a8784f]">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <p className="text-lg leading-8">{service}</p>
+                <p className="text-base leading-6">{service}</p>
               </div>
             ))}
           </div>
