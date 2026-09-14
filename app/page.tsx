@@ -357,44 +357,71 @@ export default async function HomePage() {
       )}
 
       <section className="px-3 py-6 sm:px-5 sm:py-8 lg:px-7">
-        <div className="relative mx-auto min-h-[560px] max-w-[1600px] overflow-hidden rounded-[1.7rem] bg-stone-900 sm:rounded-[2.2rem]">
-          <Image
-            src="/home/approach-bg.png"
-            alt="תכנון נגרות בהתאמה אישית"
-            fill
-            sizes="100vw"
-            className="object-cover"
-          />
+        <div className="mx-auto max-w-[1600px] overflow-hidden rounded-[1.7rem] bg-[#171614] px-6 py-10 text-white sm:rounded-[2.2rem] sm:px-9 sm:py-12 md:px-12 lg:px-16 lg:py-16">
+          <div className="grid gap-10 lg:grid-cols-[.55fr_1.45fr] lg:items-end">
+            <div>
+              <p className="text-xs font-medium tracking-[0.25em] text-white/55">
+                02 / פרזול ואבזור משלים
+              </p>
+              <div className="mt-5 h-px w-14 bg-[#c79a6a]" />
+            </div>
 
-          <div className="absolute inset-0 bg-gradient-to-l from-black/82 via-black/52 to-black/20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/62 via-transparent to-black/10" />
+            <div>
+              <h2 className="max-w-4xl text-4xl font-light leading-[1.12] tracking-[-0.03em] md:text-6xl">
+                פרזול ואבזור משלים
+                <br />
+                <span className="text-white/55">לכל חלל ולכל צורך.</span>
+              </h2>
+              <p className="mt-6 max-w-2xl text-sm leading-7 text-white/62 md:text-base">
+                פתרונות פרזול ואבזור שנבחרים כחלק מהתכנון הכולל — לנוחות שימוש,
+                פונקציונליות ומראה נקי ומדויק בכל פרויקט.
+              </p>
+            </div>
+          </div>
 
-          <div className="relative z-10 flex min-h-[560px] items-end px-7 py-12 text-white sm:px-10 sm:py-14 md:px-14 md:py-16 lg:px-20">
-            <div className="grid w-full gap-10 lg:grid-cols-[.55fr_1.45fr] lg:items-end">
-              <div>
-                <p className="text-xs font-medium tracking-[0.25em] text-white/60">
-                  02 / הגישה שלנו
-                </p>
+          <div className="mt-10 grid gap-4 md:grid-cols-3 lg:mt-14">
+            {[
+              {
+                number: "01",
+                title: "מטבחים",
+                text: "ידיות, מסילות למגירות, צירים, קלפות ופתרונות אחסון חכמים למטבח.",
+                image: "/hardware/kitchens.jpeg",
+              },
+              {
+                number: "02",
+                title: "דלתות",
+                text: "ידיות, מנעולים, צירים, מסילות לדלתות הזזה ואביזרי גמר בהתאמה לסגנון הדלת.",
+                image: "/hardware/doors.jpeg",
+              },
+              {
+                number: "03",
+                title: "חדר ארונות",
+                text: "מוטות תלייה, מגירות, סלסלות, מתקני נעליים ופתרונות אבזור לניצול נכון של החלל.",
+                image: "/hardware/walk-in-closet.jpeg",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="group relative min-h-[360px] overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.035] sm:min-h-[420px]"
+              >
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover transition duration-700 group-hover:scale-[1.04]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10" />
 
-                <div className="mt-5 h-px w-14 bg-[#c79a6a]" />
-              </div>
-
-              <div>
-                <h2 className="max-w-5xl text-4xl font-light leading-[1.2] tracking-[-0.03em] text-white md:text-6xl">
-                  אנחנו לא מתחילים ממוצר.
-                  <br />
-                  אנחנו מתחילים מהחלל,
-                  <span className="text-white/62"> מהשימוש ומהאדם שחי בו.</span>
-                </h2>
-
-                <div className="mt-10 flex flex-wrap gap-x-12 gap-y-5 border-t border-white/25 pt-6 text-sm text-white/72">
-                  <span>תכנון מותאם אישית</span>
-                  <span>חומרי גלם איכותיים</span>
-                  <span>פרזול וגימור מדויק</span>
-                  <span>ייצור והתקנה</span>
+                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7">
+                  <span className="text-xs font-medium tracking-[0.22em] text-white/55">
+                    {item.number}
+                  </span>
+                  <h3 className="mt-3 text-2xl font-medium sm:text-3xl">{item.title}</h3>
+                  <p className="mt-3 max-w-sm text-sm leading-7 text-white/70">{item.text}</p>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
