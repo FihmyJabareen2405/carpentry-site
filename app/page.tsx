@@ -646,7 +646,6 @@ type CustomerGalleryItem = {
   id: string;
   projectTitle: string;
   projectSlug: string;
-  city: string | null;
   categoryName: string | null;
   imageUrl: string;
   alt: string;
