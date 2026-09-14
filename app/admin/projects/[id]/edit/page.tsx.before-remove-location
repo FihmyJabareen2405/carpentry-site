@@ -75,6 +75,7 @@ export default async function EditProjectPage({
         category_id,
         room_id,
         style_id,
+        city,
         finish,
         year,
         featured,
@@ -524,7 +525,19 @@ export default async function EditProjectPage({
             description="מידע נוסף המופיע בעמוד הפרויקט."
           >
             <div className="grid gap-6 md:grid-cols-3">
-<FormField label="גימור">
+              <FormField label="עיר / מיקום">
+                <input
+                  name="city"
+                  type="text"
+                  maxLength={100}
+                  defaultValue={
+                    project.city ?? ""
+                  }
+                  className={inputClass}
+                />
+              </FormField>
+
+              <FormField label="גימור">
                 <input
                   name="finish"
                   type="text"

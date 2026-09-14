@@ -65,7 +65,13 @@ export async function createProject(formData: FormData) {
     String(
       formData.get("style_id") || ""
     ) || null;
-const finish =
+
+  const city =
+    String(
+      formData.get("city") || ""
+    ).trim() || null;
+
+  const finish =
     String(
       formData.get("finish") || ""
     ).trim() || null;
@@ -140,6 +146,7 @@ const finish =
       category_id: categoryId,
       room_id: roomId,
       style_id: styleId,
+      city,
       finish,
       year,
       featured,

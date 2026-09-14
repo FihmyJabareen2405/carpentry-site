@@ -22,6 +22,7 @@ export default async function HomePage() {
           title,
           slug,
           description,
+          city,
           featured,
           created_at,
           categories (
@@ -147,6 +148,7 @@ export default async function HomePage() {
         id: `${project.id}-${firstImage.id}`,
         projectTitle: project.title,
         projectSlug: project.slug,
+        city: project.city,
         categoryName: category?.name ?? null,
         imageUrl: getProjectImageUrl(firstImage.storage_path),
         alt: firstImage.alt_text || project.title,
@@ -689,7 +691,13 @@ function CustomerGalleryCard({
             >
               {item.projectTitle}
             </h3>
-</div>
+
+            {item.city && (
+              <p className="mt-2 text-xs text-white/62 sm:text-sm">
+                {item.city}
+              </p>
+            )}
+          </div>
 
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/10 text-base backdrop-blur-sm transition duration-300 group-hover:-translate-x-1 group-hover:bg-white group-hover:text-stone-900 sm:h-11 sm:w-11">
             ←

@@ -50,6 +50,7 @@ export default async function ProjectsPage({
         title,
         slug,
         description,
+        city,
         finish,
         year,
         featured,
@@ -486,7 +487,11 @@ function ProjectCard({
             {details.room && (
               <ProjectTag>{details.room.name}</ProjectTag>
             )}
-</div>
+
+            {project.city && (
+              <ProjectTag>{project.city}</ProjectTag>
+            )}
+          </div>
         </div>
       </Link>
     </article>

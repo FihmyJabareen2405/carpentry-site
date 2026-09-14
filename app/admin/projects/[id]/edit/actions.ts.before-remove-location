@@ -52,7 +52,11 @@ export async function updateProject(
 
   const styleId =
     String(formData.get("style_id") || "") || null;
-const finish =
+
+  const city =
+    String(formData.get("city") || "").trim() || null;
+
+  const finish =
     String(formData.get("finish") || "").trim() || null;
 
   const yearValue = String(formData.get("year") || "");
@@ -129,6 +133,7 @@ const finish =
       category_id: categoryId,
       room_id: roomId,
       style_id: styleId,
+      city,
       finish,
       year,
       featured,

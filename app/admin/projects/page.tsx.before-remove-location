@@ -53,6 +53,7 @@ export default async function AdminProjectsPage() {
         id,
         title,
         slug,
+        city,
         year,
         published,
         featured,
@@ -302,7 +303,13 @@ export default async function AdminProjectsPage() {
                             </h3>
 
                             <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-stone-500">
-{project.year && (
+                              {project.city && (
+                                <span>
+                                  {project.city}
+                                </span>
+                              )}
+
+                              {project.year && (
                                 <span>
                                   {project.year}
                                 </span>
