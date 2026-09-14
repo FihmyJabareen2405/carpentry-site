@@ -279,7 +279,7 @@ export default async function HomePage() {
                   01 / תחומי עבודה
                 </p>
 
-                <div className="mt-5 h-px w-14 bg-[#c79a6a]" />
+                <div className="mt-4 h-px w-14 bg-[#c79a6a]" />
                 <h2 className="mt-6 text-4xl font-light leading-tight tracking-[-0.03em] md:text-5xl">
                   נגרות לכל
                   <br />
@@ -356,9 +356,9 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="px-3 py-6 sm:px-5 sm:py-8 lg:px-7">
-        <div className="mx-auto max-w-[1600px] overflow-hidden rounded-[1.7rem] bg-[#171614] px-6 py-10 text-white sm:rounded-[2.2rem] sm:px-9 sm:py-12 md:px-12 lg:px-16 lg:py-16">
-          <div className="grid gap-10 lg:grid-cols-[.55fr_1.45fr] lg:items-end">
+      <section id="hardware" className="scroll-mt-28 px-3 py-4 sm:px-5 sm:py-5 lg:px-7">
+        <div className="mx-auto max-w-[1600px] overflow-hidden rounded-[1.7rem] bg-[#171614] px-6 py-7 text-white sm:rounded-[2.2rem] sm:px-8 sm:py-8 md:px-10 lg:px-12 lg:py-10">
+          <div className="grid gap-6 lg:grid-cols-[.55fr_1.45fr] lg:items-end">
             <div>
               <p className="text-xs font-medium tracking-[0.25em] text-white/55">
                 02 / פרזול ואבזור משלים
@@ -367,42 +367,43 @@ export default async function HomePage() {
             </div>
 
             <div>
-              <h2 className="max-w-4xl text-4xl font-light leading-[1.12] tracking-[-0.03em] md:text-6xl">
+              <h2 className="max-w-4xl text-3xl font-light leading-[1.12] tracking-[-0.03em] md:text-4xl">
                 פרזול ואבזור משלים
                 <br />
                 <span className="text-white/55">לכל חלל ולכל צורך.</span>
               </h2>
-              <p className="mt-6 max-w-2xl text-sm leading-7 text-white/62 md:text-base">
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-white/62">
                 פתרונות פרזול ואבזור שנבחרים כחלק מהתכנון הכולל — לנוחות שימוש,
                 פונקציונליות ומראה נקי ומדויק בכל פרויקט.
               </p>
             </div>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3 lg:mt-14">
+          <div className="mt-7 grid gap-4 md:grid-cols-3 lg:mt-8">
             {[
               {
                 number: "01",
                 title: "מטבחים",
-                text: "ידיות, מסילות למגירות, צירים, קלפות ופתרונות אחסון חכמים למטבח.",
                 image: "/hardware/kitchens.jpeg",
+                href: "/hardware/kitchens",
               },
               {
                 number: "02",
                 title: "דלתות",
-                text: "ידיות, מנעולים, צירים, מסילות לדלתות הזזה ואביזרי גמר בהתאמה לסגנון הדלת.",
                 image: "/hardware/doors.jpeg",
+                href: "/hardware/doors",
               },
               {
                 number: "03",
                 title: "חדר ארונות",
-                text: "מוטות תלייה, מגירות, סלסלות, מתקני נעליים ופתרונות אבזור לניצול נכון של החלל.",
                 image: "/hardware/walk-in-closet.jpeg",
+                href: "/hardware/walk-in-closet",
               },
             ].map((item) => (
-              <div
+              <Link
                 key={item.title}
-                className="group relative min-h-[360px] overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.035] sm:min-h-[420px]"
+                href={item.href}
+                className="group relative min-h-[235px] overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.035] sm:min-h-[270px] lg:min-h-[285px]"
               >
                 <Image
                   src={item.image}
@@ -413,14 +414,17 @@ export default async function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10" />
 
-                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7">
+                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
                   <span className="text-xs font-medium tracking-[0.22em] text-white/55">
                     {item.number}
                   </span>
-                  <h3 className="mt-3 text-2xl font-medium sm:text-3xl">{item.title}</h3>
-                  <p className="mt-3 max-w-sm text-sm leading-7 text-white/70">{item.text}</p>
+                  <h3 className="mt-2 text-2xl font-medium sm:text-[1.7rem]">{item.title}</h3>
+                  <span className="mt-3 inline-flex items-center gap-2 text-xs text-white/60 transition group-hover:text-white">
+                    לצפייה בפרזול
+                    <span>←</span>
+                  </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
