@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  KitchenGallery,
+  type KitchenGalleryItem,
+} from "@/components/KitchenGallery";
 
 type CategoryConfig = {
   title: string;
@@ -114,24 +118,73 @@ const CATEGORY_CONTENT: Record<string, CategoryConfig> = {
   },
 };
 
-const KITCHEN_STYLES: StyleCard[] = [
+const KITCHEN_GALLERIES: KitchenGalleryItem[] = [
   {
-    title: "המטבח המודרני",
+    title: "קלאסי לבן",
     subtitle:
-      "מינימליזם, קווים נקיים וחזיתות חלקות. מראה מדויק, פונקציונלי ומסודר עם דגש על פתרונות פתיחה נקיים.",
-    image: "/categories/details/kitchens/01.png",
+      "חזיתות מסגרת בגוון לבן, ידיות זהב, ויטרינות מוארות ואי מרכזי. מראה אלגנטי ועל־זמני עם תחושה בהירה ויוקרתית.",
+    cover: "/categories/details/kitchens/galleries/01/cover.webp",
+    images: [
+      "/categories/details/kitchens/galleries/01/cover.webp",
+      "/categories/details/kitchens/galleries/01/detail-01.webp",
+      "/categories/details/kitchens/galleries/01/detail-02.webp",
+      "/categories/details/kitchens/galleries/01/detail-03.webp",
+      "/categories/details/kitchens/galleries/01/detail-04.webp",
+      "/categories/details/kitchens/galleries/01/detail-05.webp",
+      "/categories/details/kitchens/galleries/01/detail-06.webp",
+      "/categories/details/kitchens/galleries/01/detail-07.webp",
+    ],
   },
   {
-    title: "המטבח הכפרי ופרובאנס",
+    title: "מודרני חם",
     subtitle:
-      "אווירה חמה ומשפחתית, שימוש בעץ וגוונים רכים, חזיתות עם מסגרות ופרזול בעל אופי קלאסי.",
-    image: "/categories/details/kitchens/02.png",
+      "שילוב מאוזן בין חזיתות בהירות, עץ טבעי ותאורה חמה. מטבח משפחתי שמתחבר לפינת האוכל ויוצר חלל מזמין ונעים.",
+    cover: "/categories/details/kitchens/galleries/02/cover.webp",
+    images: [
+      "/categories/details/kitchens/galleries/02/cover.webp",
+      "/categories/details/kitchens/galleries/02/detail-01.webp",
+      "/categories/details/kitchens/galleries/02/detail-02.webp",
+      "/categories/details/kitchens/galleries/02/detail-03.webp",
+      "/categories/details/kitchens/galleries/02/detail-04.webp",
+      "/categories/details/kitchens/galleries/02/detail-05.webp",
+    ],
   },
   {
-    title: "המטבח התעשייתי אורבני",
+    title: "מודרני אורבני",
     subtitle:
-      "שילוב של עץ, מתכת, בטון וגוונים כהים. סגנון שמושפע מלופטים עירוניים ומעניק לחלל אופי חזק.",
-    image: "/categories/details/kitchens/03.png",
+      "קווים ישרים, חזיתות חלקות ונגיעות שחורות שמוסיפות עומק. ויטרינות מוארות ומכשירי חשמל כהים משלימים מראה מדויק ועכשווי.",
+    cover: "/categories/details/kitchens/galleries/03/cover.webp",
+    images: [
+      "/categories/details/kitchens/galleries/03/cover.webp",
+      "/categories/details/kitchens/galleries/03/detail-01.webp",
+      "/categories/details/kitchens/galleries/03/detail-02.webp",
+      "/categories/details/kitchens/galleries/03/detail-03.webp",
+      "/categories/details/kitchens/galleries/03/detail-04.webp",
+    ],
+  },
+  {
+    title: "מינימליסטי נקי",
+    subtitle:
+      "תכנון שקט ומדויק עם חזיתות לבנות ללא ידיות, משטחי אבן בגוון טבעי ואחסון שממשיך לכל גובה הקיר.",
+    cover: "/categories/details/kitchens/galleries/04/cover.webp",
+    images: [
+      "/categories/details/kitchens/galleries/04/cover.webp",
+      "/categories/details/kitchens/galleries/04/detail-01.webp",
+      "/categories/details/kitchens/galleries/04/detail-02.webp",
+      "/categories/details/kitchens/galleries/04/detail-03.webp",
+    ],
+  },
+  {
+    title: "לבן, עץ ותאורה",
+    subtitle:
+      "מטבח בהיר עם חזיתות חלקות, עץ טבעי, ויטרינה שחורה ותאורה דקורטיבית שהופכת את החלל לאלגנטי ומזמין.",
+    cover: "/categories/details/kitchens/galleries/05/cover.webp",
+    images: [
+      "/categories/details/kitchens/galleries/05/cover.webp",
+      "/categories/details/kitchens/galleries/05/detail-01.webp",
+      "/categories/details/kitchens/galleries/05/detail-02.webp",
+      "/categories/details/kitchens/galleries/05/detail-03.webp",
+    ],
   },
 ];
 
@@ -342,9 +395,9 @@ export default async function CategoryPage({ params }: PageProps) {
             <h2 className="mt-4 text-4xl font-light tracking-[-0.03em] md:text-5xl">
               {slug === "kitchens" ? (
                 <>
-                  בחרו את השפה
+                  חמישה מטבחים,
                   <br />
-                  שמתאימה לבית שלכם.
+                  כל אחד עם אופי משלו.
                 </>
               ) : (
                 <>
@@ -356,9 +409,11 @@ export default async function CategoryPage({ params }: PageProps) {
             </h2>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            {(slug === "kitchens" ? KITCHEN_STYLES : DOOR_STYLES).map(
-              (style, index) => (
+          {slug === "kitchens" ? (
+            <KitchenGallery kitchens={KITCHEN_GALLERIES} />
+          ) : (
+            <div className="grid gap-4 md:grid-cols-3">
+              {DOOR_STYLES.map((style, index) => (
                 <article
                   key={style.title}
                   className="group relative min-h-[420px] overflow-hidden rounded-[1.7rem] bg-stone-900 md:min-h-[520px]"
@@ -387,9 +442,9 @@ export default async function CategoryPage({ params }: PageProps) {
                     </p>
                   </div>
                 </article>
-              )
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
       ) : slug === "bedrooms-kids" ? (
         <section className="mx-auto max-w-[1450px] px-3 pb-20 sm:px-5 md:pb-28">
