@@ -186,6 +186,18 @@ const KITCHEN_GALLERIES: KitchenGalleryItem[] = [
       "/categories/details/kitchens/galleries/05/detail-03.webp",
     ],
   },
+  {
+    title: "כפרי מודרני",
+    subtitle:
+      "מטבח לבן בגוון חם עם אי עץ מרכזי, קרניזים טבעיים וויטרינה מוארת. שילוב נקי בין אופי כפרי, אחסון חכם ותכנון עכשווי.",
+    cover: "/categories/details/kitchens/galleries/06/cover.webp",
+    images: [
+      "/categories/details/kitchens/galleries/06/cover.webp",
+      "/categories/details/kitchens/galleries/06/detail-01.webp",
+      "/categories/details/kitchens/galleries/06/detail-02.webp",
+      "/categories/details/kitchens/galleries/06/detail-03.webp",
+    ],
+  },
 ];
 
 const DOOR_STYLES: StyleCard[] = [
